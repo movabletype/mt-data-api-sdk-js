@@ -1,5 +1,5 @@
 {
-  "name": "movabletype-javascript-sdk",
+  "name": "movabletype-sdk",
   "version": "0.1.0",
   "description": "Movable Type JavaScript SDK",
   "homepage": "https://github.com/movabletype/movabletype-javascript-sdk",
@@ -8,7 +8,7 @@
     "url": "git://github.com/movabletype/movabletype-javascript-sdk.git"
   },
   "author": "Six Apart, Ltd.",
-  "main": "Gruntfile.js",
+  "main": "./lib/movabletype",
   "dependencies": {
     "form-data": "~0.0.10",
     "xmlhttprequest": "git://github.com/usualoma/node-XMLHttpRequest.git"
