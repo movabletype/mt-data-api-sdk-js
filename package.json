@@ -1,0 +1,23 @@
+{
+  "name": "movabletype-javascript-sdk",
+  "version": "0.1.0",
+  "description": "Movable Type JavaScript SDK",
+  "homepage": "https://github.com/movabletype/movabletype-javascript-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/movabletype/movabletype-javascript-sdk.git"
+  },
+  "author": "Six Apart, Ltd.",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "form-data": "~0.0.10",
+    "xmlhttprequest": "git://github.com/usualoma/node-XMLHttpRequest.git"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-watch": "~0.2.0",
+    "grunt-contrib-concat": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.0"
+  }
+}

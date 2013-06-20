@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+var path     = require('path'),
+    fs       = require('fs'),
+    lib      = path.join(path.dirname(path.dirname(fs.realpathSync(__filename))), 'lib'),
+    clientId = path.basename(process.argv[1]);
+
+if (process.argv.length < 4) {
+  console.error("Usage: " + clientId + " <baseUrl> <version>")
+  process.exit(1)
+}
+
+var DataAPI = require(lib + '/movabletype').DataAPI['v' + process.argv[3]],
+    api     = new DataAPI({
+        baseUrl: process.argv[2],
+        clientId: clientId
+    });
+
+api.request('GET', 'endpoints', function(response) {
+    var i, j, e,
+        originals = response.items,
+        endpoints = [],
+        keys = ['id', 'route', 'verb', 'resources'];
+
+    for (var i = 0; i < originals.length; i++) {
+        e = {};
+        for (var j = 0; j < keys.length; j++) {
+            if (keys[j] in originals[i]) {
+                e[keys[j]] = originals[i][keys[j]];
+            }
+        }
+        endpoints.push(e);
+    }
+
+    console.log(JSON.stringify(endpoints, undefined, '    '));
+});

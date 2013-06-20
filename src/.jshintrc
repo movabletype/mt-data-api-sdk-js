@@ -1,0 +1,25 @@
+{
+    "strict": false,
+	"quotmark": false,
+	"onevar": true,
+	"sub": true,
+
+	"boss": true,
+	"curly": true,
+	"eqeqeq": true,
+	"eqnull": true,
+	"expr": true,
+	"immed": true,
+	"noarg": true,
+	"smarttabs": true,
+	"trailing": true,
+	"undef": true,
+	"unused": true,
+
+	"es5": true,
+
+	"globals": {
+		"window": true,
+		"Cookie": true
+	}
+}
