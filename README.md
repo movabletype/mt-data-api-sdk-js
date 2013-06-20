@@ -56,14 +56,14 @@ Then, you can install grunt-cli with npm like the following. When you have some 
   npm install
 ```
 
-# Building for develop
+## Building for develop
 grunt dev task generate scripts in lib and dist directory from src directory, and run the dependant tasks
 
 ```
   grunt dev
 ```
 
-# Building for production
+## Building for production
 grunt build task generate optimized scrips in dist directory
 
 ```
