@@ -2,10 +2,10 @@
   "name": "movabletype-sdk",
   "version": "0.1.0",
   "description": "Movable Type JavaScript SDK",
-  "homepage": "https://github.com/movabletype/movabletype-javascript-sdk",
+  "homepage": "https://github.com/movabletype/movabletype-sdk-js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/movabletype/movabletype-javascript-sdk.git"
+    "url": "git://github.com/movabletype/movabletype-sdk-js.git"
   },
   "author": "Six Apart, Ltd.",
   "main": "./lib/movabletype",
