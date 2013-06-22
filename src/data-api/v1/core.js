@@ -1,4 +1,23 @@
+/**
+ * @namespace MT
+ */
 
+/**
+ * Creates a new DataAPI object
+ * @class DataAPI
+ * @constructor
+ * @param {Object} options Options.
+ *   @param {String} options.clientId client ID
+ *     (Available charactors: Alphabet, '_', '-')
+ *   @param {String} options.baseUrl the CGI URL of the DataAPI
+ *     (e.g. http://example.com/mt/mt-data-api.cgi)<br />
+ *   @param {String} options.cookieDomain
+ *   @param {String} options.cookiePath
+ *   @param {String} options.format
+ *   @param {String} options.async
+ *   @param {String} options.cache
+ *   @param {String} options.disableFormData
+ */
 var DataAPI = function(options) {
     var i, k, l,
         requireds = ['clientId', 'baseUrl'];
@@ -42,12 +61,55 @@ var DataAPI = function(options) {
     this.trigger('initialize');
 };
 
-DataAPI.version        = 1;
+
+/**
+ * API version.
+ * @property version
+ * @static
+ * @type Number
+ */
+DataAPI.version = 1;
+
+/**
+ * The key of access token of this api object.
+ * This value is used for the session store.
+ * @property accessTokenKey
+ * @static
+ * @type String
+ */
 DataAPI.accessTokenKey = 'mt_data_api_access_token';
-DataAPI.iframePrefix   = 'mt_data_api_iframe_';
-DataAPI.callbacks      = {};
-DataAPI.defaultFormat  = 'json';
-DataAPI.formats        = {
+
+/**
+ * The name prefix for iframe that created to upload asset.
+ * @property iframePrefix
+ * @static
+ * @type String
+ */
+DataAPI.iframePrefix = 'mt_data_api_iframe_';
+
+/**
+ * Default format that serializes data.
+ * @property defaultFormat
+ * @static
+ * @type Number
+ */
+DataAPI.defaultFormat = 'json';
+
+/**
+ * Class level callback function data.
+ * @property callbacks
+ * @static
+ * @type Object
+ */
+DataAPI.callbacks = {};
+
+/**
+ * Available formats that serialize data.
+ * @property formats
+ * @static
+ * @type Object
+ */
+DataAPI.formats = {
     json: {
         fileExtension: 'json',
         mimeType: 'application/json',
@@ -60,6 +122,13 @@ DataAPI.formats        = {
     }
 };
 
+/**
+ * Register callback to class.
+ * @method on
+ * @static
+ * @param {String} key Event name
+ * @param {Function} callback Callback function
+ */
 DataAPI.on = function(key, callback) {
     if (! this.callbacks[key]) {
         this.callbacks[key] = [];
@@ -67,6 +136,14 @@ DataAPI.on = function(key, callback) {
 
     this.callbacks[key].push(callback);
 };
+
+/**
+ * Deregister callback from class.
+ * @method off
+ * @static
+ * @param {String} key Event name
+ * @param {Function} callback Callback function
+ */
 DataAPI.off = function(key, callback) {
     var i, callbacks;
 
@@ -85,11 +162,37 @@ DataAPI.off = function(key, callback) {
     }
 };
 
+/**
+ * Register formats that serialize data.
+ * @method registerFormat
+ * @static
+ * @param {String} key Format name
+ * @param {Object} spec Format spec
+ *   @param {String} spec.fileExtension Extension
+ *   @param {String} spec.mimeType MIME type
+ */
 DataAPI.registerFormat = function(key, spec) {
     DataAPI.formats[key] = spec;
 };
 
-DataAPI.prototype      = {
+/**
+ * Get default format of this class
+ * @method getDefaultFormat
+ * @static
+ * @return {Object} Format
+ */
+DataAPI.getDefaultFormat = function() {
+    return DataAPI.formats[DataAPI.defaultFormat];
+};
+
+DataAPI.prototype = {
+
+    /**
+     * Get authorization URL
+     * @method getAuthorizationUrl
+     * @param {String} redirectUrl The user is redirected to this URL with "#_login" if authorization succeeded.
+     * @return {String} Authorization URL
+     */
     getAuthorizationUrl: function(redirectUrl) {
         return this.o.baseUrl.replace(/\/*$/, '/') +
             'v' + this.getVersion() +
@@ -106,14 +209,31 @@ DataAPI.prototype      = {
         return DataAPI.iframePrefix + (++this.iframeId);
     },
 
+    /**
+     * Get API version
+     * @method getVersion
+     * @return {String} API version
+     */
     getVersion: function() {
         return DataAPI.version;
     },
 
+    /**
+     * Get application key of this object
+     * @method getAppKey
+     * @return {String} Application key
+     *   This value is used for the session store.
+     */
     getAppKey: function() {
         return DataAPI.accessTokenKey + '_' + this.o.clientId;
     },
 
+    /**
+     * Get format that associated with specified MIME Type
+     * @method findFormat
+     * @param {String} mimeType MIME Type
+     * @return {Object|null} Format. Return null if any format is not found.
+     */
     findFormat: function(mimeType) {
         if (! mimeType) {
             return null;
@@ -128,22 +248,44 @@ DataAPI.prototype      = {
         return null;
     },
 
-    getDefaultFormat: function() {
-        return DataAPI.formats[DataAPI.defaultFormat];
-    },
-
+    /**
+     * Get current format of this object
+     * @method getCurrentFormat
+     * @return {Object} Format
+     */
     getCurrentFormat: function() {
-        return DataAPI.formats[this.o.format] || this.getDefaultFormat();
+        return DataAPI.formats[this.o.format] || DataAPI.getDefaultFormat();
     },
 
+    /**
+     * Serialize data.
+     * @method serializeData
+     * @param {Object} data The data to serialize
+     * @return {String} Serialized data
+     */
     serializeData: function() {
         return this.getCurrentFormat().serialize.apply(this, arguments);
     },
 
+    /**
+     * Unserialize data.
+     * @method unserializeData
+     * @param {String} data The data to unserialize
+     * @return {Object} Unserialized data
+     */
     unserializeData: function() {
         return this.getCurrentFormat().unserialize.apply(this, arguments);
     },
 
+    /**
+     * Store token data via current session store.
+     * @method storeToken
+     * @param {Object} tokenData The token data
+     *   @param {String} tokenData.accessToken access token
+     *   @param {String} tokenData.expiresIn The number of seconds
+     *     until access token becomes invalid
+     *   @param {String} tokenData.sessionId [optional] session ID
+     */
     storeToken: function(tokenData) {
         var o = this.o;
         tokenData.startTime = this._getCurrentEpoch();
@@ -172,6 +314,11 @@ DataAPI.prototype      = {
         return defaultToken;
     },
 
+    /**
+     * Get token data via current session store.
+     * @method getToken
+     * @return {Object} Token data
+     */
     getToken: function() {
         var token,
             o = this.o;
@@ -210,11 +357,31 @@ DataAPI.prototype      = {
         return this.tokenData.accessToken;
     },
 
+    /**
+     * Get authorization request header
+     * @method getAuthorizationHeader
+     * @return {String|null} Header string. Return null if api object has no token.
+     */
     getAuthorizationHeader: function() {
         return 'MTAuth accessToken=' + this.getToken();
     },
 
-    bindEndpointParams: function(endpoint, params) {
+    /**
+     * Bind parameters to route spec
+     * @method bindEndpointParams
+     * @param {String} route Specification of route
+     * @param {Object} params parameters
+     *   @param {Number|Object|Function} params.{key} Value to bind
+     * @return {String} Endpoint to witch parameters was bound
+     * @example
+     * <pre><code>api.bindEndpointParams('/sites/:site_id/entries/:entry_id/comments/:comment_id', {
+     *    blog_id: 1,
+     *    entry_id: {id: 1},
+     *    comment_id: functioin(){ return 1; }
+     * });
+     * </code></pre>
+     */
+    bindEndpointParams: function(route, params) {
         var k, v;
 
         for (k in params) {
@@ -225,9 +392,9 @@ DataAPI.prototype      = {
             if (typeof v === 'function') {
                 v = v();
             }
-            endpoint = endpoint.replace(new RegExp(':' + k), v);
+            route = route.replace(new RegExp(':' + k), v);
         }
-        return endpoint;
+        return route;
     },
 
     _isElement: function(e, name) {
@@ -366,6 +533,11 @@ DataAPI.prototype      = {
         } catch( e ) {}
     },
 
+    /**
+     * Create XMLHttpRequest by higher browser compatibility way
+     * @method newXMLHttpRequest
+     * @return {XMLHttpRequest} Created XMLHttpRequest
+     */
     newXMLHttpRequest: function() {
         return this._newXMLHttpRequestStandard() ||
             this._newXMLHttpRequestActiveX() ||
@@ -387,6 +559,10 @@ DataAPI.prototype      = {
     },
 
     _isEmptyObject: function(o) {
+        if (! o) {
+            return true;
+        }
+
         for (var k in o) {
             if (o.hasOwnProperty(k)) {
                 return false;
@@ -395,6 +571,16 @@ DataAPI.prototype      = {
         return true;
     },
 
+    /**
+     * Send request to specified URL with params via XMLHttpRequest
+     * @method sendXMLHttpRequest
+     * @param {XMLHttpRequest} xhr XMLHttpRequest object to send request
+     * @param {String} method Request method
+     * @param {String} url Request URL
+     * @param {String|FormData} params Parameters to send with request
+     * @param {Object|null} defaultParams System default parameters to merge to params
+     * @return {XMLHttpRequest}
+     */
     sendXMLHttpRequest: function(xhr, method, url, params, defaultParams) {
         var k, headers, uk;
 
@@ -520,6 +706,24 @@ DataAPI.prototype      = {
         }
     },
 
+    /**
+     * Execute function with specified options
+     * @method withOptions
+     * @param {option} option Option to overwrite
+     * @param {Function} func Function to execute
+     * @return Return value of specified func
+     * @example
+     * <pre><code>// The DataAPI object is created with {async: true}
+     * api.withOptions({async: false}, function() {
+     *   api.listEntries(1, function() {
+     *     // This is executed synchronously
+     *   });
+     * });
+     * api.listEntries(1, function() {
+     *   // This is executed asynchronously
+     * });
+     * </code></pre>
+     */
     withOptions: function(option, func) {
         var k, result,
             originalOption = this.o,
@@ -539,6 +743,20 @@ DataAPI.prototype      = {
         return result;
     },
 
+    /**
+     * Execute function with specified options
+     * @method request
+     * @param {String} method Request method
+     * @param {String} endpoint Endpoint to request
+     * @param {String|Object} [queryParameter]
+     * @param {String|Object|HTMLFormElement|FormData} [requestData]
+     *   @param {String|Object|HTMLFormElement} [requestData.{requires-json-text}] Can specify json-text value by string or object or HTMLFormElement. Serialize automatically if object or HTMLFormElement is passed.
+     *   @param {HTMLInputElement|File} [requestData.{requires-file}] Can specify file value by HTMLInputElement or File object.
+     * @param {Function} [callback]
+     * @return {XMLHttpRequest|null} Return XMLHttpRequest if request is sent
+     *   via XMLHttpRequest. Return null if request is not sent
+     *   via XMLHttpRequest (e.g. sent via iframe).
+     */
     request: function(method, endpoint) {
         var i, k, v, base,
             api        = this,
@@ -642,7 +860,7 @@ DataAPI.prototype      = {
             defaultParams._ = new Date().getTime();
         }
 
-        if (currentFormat !== this.getDefaultFormat()) {
+        if (currentFormat !== DataAPI.getDefaultFormat()) {
             defaultParams.format = currentFormat.fileExtension;
         }
 
@@ -859,10 +1077,28 @@ DataAPI.prototype      = {
         }
     },
 
+    /**
+     * Register callback to instance.
+     * @method on
+     * @param {String} key Event name
+     * @param {Function} callback Callback function
+     */
     on: DataAPI.on,
 
+    /**
+     * Deregister callback from instance.
+     * @method on
+     * @param {String} key Event name
+     * @param {Function} callback Callback function
+     */
     off: DataAPI.off,
 
+    /**
+     * Trigger event
+     * First, run class level callbacks. Then, run instance level callbacks.
+     * @method trigger
+     * @param {String} key Event name
+     */
     trigger: function(key) {
         var i,
             args      = Array.prototype.slice.call(arguments, 1),
@@ -916,12 +1152,53 @@ DataAPI.prototype      = {
         };
     },
 
+    /**
+     * Generate endpoint methods
+     * @method generateEndpointMethods
+     * @param {Array.Object} endpoints Endpoints to register
+     *   @param {Object} endpoints.{i}
+     *     @param {String} endpoints.{i}.id
+     *     @param {String} endpoints.{i}.route
+     *     @param {String} endpoints.{i}.verb
+     *     @param {Array.String} [endpoints.{i}.resources]
+     * @example
+     * <pre><code>api.generateEndpointMethods([
+     *   {
+     *       "id": "list_entries",
+     *       "route": "/sites/:site_id/entries",
+     *       "verb": "GET",
+     *   },
+     *   {
+     *       "id": "create_entry",
+     *       "route": "/sites/:site_id/entries",
+     *       "verb": "POST",
+     *       "resources": [
+     *           "entry"
+     *       ]
+     *   }
+     * ]);
+     * </code></pre>
+     */
     generateEndpointMethods: function(endpoints) {
         for (var i = 0; i < endpoints.length; i++) {
             this._generateEndpointMethod(endpoints[i]);
         }
     },
 
+    /**
+     * Load endpoint from DataAPI dynamically
+     * @method loadEndpoints
+     * @param {Object} [params]
+     *   @param {String} [params.includeComponents] Comma separated component IDs to load
+     *   @param {String} [params.excludeComponents] Comma separated component IDs to exclude
+     * @example
+     * <pre><code>api.loadEndpoints({
+     *   includeComponents: 'your-extension-module'
+     * });
+     * api.getDataViaYourExtensionModule(function(response) {
+     * });
+     * </code></pre>
+     */
     loadEndpoints: function(params) {
         var api = this;
 
