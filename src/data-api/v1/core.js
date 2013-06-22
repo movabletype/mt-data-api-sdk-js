@@ -3,14 +3,14 @@
  */
 
 /**
- * Creates a new DataAPI object
+ * The MT.DataAPI is a client class for accessing to the Movable Type DataAPI.
  * @class DataAPI
  * @constructor
  * @param {Object} options Options.
  *   @param {String} options.clientId client ID
  *     (Available charactors: Alphabet, '_', '-')
  *   @param {String} options.baseUrl the CGI URL of the DataAPI
- *     (e.g. http://example.com/mt/mt-data-api.cgi)<br />
+ *     (e.g. http://example.com/mt/mt-data-api.cgi)
  *   @param {String} options.cookieDomain
  *   @param {String} options.cookiePath
  *   @param {String} options.format
@@ -66,6 +66,7 @@ var DataAPI = function(options) {
  * API version.
  * @property version
  * @static
+ * @private
  * @type Number
  */
 DataAPI.version = 1;
@@ -75,6 +76,7 @@ DataAPI.version = 1;
  * This value is used for the session store.
  * @property accessTokenKey
  * @static
+ * @private
  * @type String
  */
 DataAPI.accessTokenKey = 'mt_data_api_access_token';
@@ -83,6 +85,7 @@ DataAPI.accessTokenKey = 'mt_data_api_access_token';
  * The name prefix for iframe that created to upload asset.
  * @property iframePrefix
  * @static
+ * @private
  * @type String
  */
 DataAPI.iframePrefix = 'mt_data_api_iframe_';
@@ -91,6 +94,7 @@ DataAPI.iframePrefix = 'mt_data_api_iframe_';
  * Default format that serializes data.
  * @property defaultFormat
  * @static
+ * @private
  * @type Number
  */
 DataAPI.defaultFormat = 'json';
@@ -99,6 +103,7 @@ DataAPI.defaultFormat = 'json';
  * Class level callback function data.
  * @property callbacks
  * @static
+ * @private
  * @type Object
  */
 DataAPI.callbacks = {};
@@ -107,6 +112,7 @@ DataAPI.callbacks = {};
  * Available formats that serialize data.
  * @property formats
  * @static
+ * @private
  * @type Object
  */
 DataAPI.formats = {
@@ -374,12 +380,11 @@ DataAPI.prototype = {
      *   @param {Number|Object|Function} params.{key} Value to bind
      * @return {String} Endpoint to witch parameters was bound
      * @example
-     * <pre><code>api.bindEndpointParams('/sites/:site_id/entries/:entry_id/comments/:comment_id', {
-     *    blog_id: 1,
-     *    entry_id: {id: 1},
-     *    comment_id: functioin(){ return 1; }
-     * });
-     * </code></pre>
+     *     api.bindEndpointParams('/sites/:site_id/entries/:entry_id/comments/:comment_id', {
+     *       blog_id: 1,
+     *       entry_id: {id: 1},
+     *       comment_id: functioin(){ return 1; }
+     *     });
      */
     bindEndpointParams: function(route, params) {
         var k, v;
@@ -713,16 +718,15 @@ DataAPI.prototype = {
      * @param {Function} func Function to execute
      * @return Return value of specified func
      * @example
-     * <pre><code>// The DataAPI object is created with {async: true}
-     * api.withOptions({async: false}, function() {
-     *   api.listEntries(1, function() {
-     *     // This is executed synchronously
-     *   });
-     * });
-     * api.listEntries(1, function() {
-     *   // This is executed asynchronously
-     * });
-     * </code></pre>
+     *     // The DataAPI object is created with {async: true}
+     *     api.withOptions({async: false}, function() {
+     *       api.listEntries(1, function() {
+     *         // This is executed synchronously
+     *       });
+     *     });
+     *     api.listEntries(1, function() {
+     *       // This is executed asynchronously
+     *     });
      */
     withOptions: function(option, func) {
         var k, result,
@@ -1087,7 +1091,7 @@ DataAPI.prototype = {
 
     /**
      * Deregister callback from instance.
-     * @method on
+     * @method off
      * @param {String} key Event name
      * @param {Function} callback Callback function
      */
@@ -1162,22 +1166,21 @@ DataAPI.prototype = {
      *     @param {String} endpoints.{i}.verb
      *     @param {Array.String} [endpoints.{i}.resources]
      * @example
-     * <pre><code>api.generateEndpointMethods([
-     *   {
-     *       "id": "list_entries",
-     *       "route": "/sites/:site_id/entries",
-     *       "verb": "GET",
-     *   },
-     *   {
-     *       "id": "create_entry",
-     *       "route": "/sites/:site_id/entries",
-     *       "verb": "POST",
-     *       "resources": [
-     *           "entry"
-     *       ]
-     *   }
-     * ]);
-     * </code></pre>
+     *     api.generateEndpointMethods([
+     *       {
+     *           "id": "list_entries",
+     *           "route": "/sites/:site_id/entries",
+     *           "verb": "GET",
+     *       },
+     *       {
+     *           "id": "create_entry",
+     *           "route": "/sites/:site_id/entries",
+     *           "verb": "POST",
+     *           "resources": [
+     *               "entry"
+     *           ]
+     *       }
+     *     ]);
      */
     generateEndpointMethods: function(endpoints) {
         for (var i = 0; i < endpoints.length; i++) {
@@ -1192,12 +1195,24 @@ DataAPI.prototype = {
      *   @param {String} [params.includeComponents] Comma separated component IDs to load
      *   @param {String} [params.excludeComponents] Comma separated component IDs to exclude
      * @example
-     * <pre><code>api.loadEndpoints({
-     *   includeComponents: 'your-extension-module'
-     * });
-     * api.getDataViaYourExtensionModule(function(response) {
-     * });
-     * </code></pre>
+     * Load endpoints only from specified module.
+     *
+     *     api.loadEndpoints({
+     *       includeComponents: 'your-extension-module'
+     *     });
+     *     api.getDataViaYourExtensionModule(function(response) {
+     *       // Do stuff
+     *     });
+     *
+     * Load all endpoints except for core.
+     * Since all the endpoints of core is already loaded.
+     *
+     *     api.loadEndpoints({
+     *       excludeComponents: 'core'
+     *     });
+     *     api.getDataViaYourExtensionModule(function(response) {
+     *       // Do stuff
+     *     });
      */
     loadEndpoints: function(params) {
         var api = this;
