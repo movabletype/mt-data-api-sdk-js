@@ -134,6 +134,7 @@ DataAPI.formats = {
  * @static
  * @param {String} key Event name
  * @param {Function} callback Callback function
+ * @category core
  */
 DataAPI.on = function(key, callback) {
     if (! this.callbacks[key]) {
@@ -149,6 +150,7 @@ DataAPI.on = function(key, callback) {
  * @static
  * @param {String} key Event name
  * @param {Function} callback Callback function
+ * @category core
  */
 DataAPI.off = function(key, callback) {
     var i, callbacks;
@@ -176,6 +178,7 @@ DataAPI.off = function(key, callback) {
  * @param {Object} spec Format spec
  *   @param {String} spec.fileExtension Extension
  *   @param {String} spec.mimeType MIME type
+ * @category core
  */
 DataAPI.registerFormat = function(key, spec) {
     DataAPI.formats[key] = spec;
@@ -186,6 +189,7 @@ DataAPI.registerFormat = function(key, spec) {
  * @method getDefaultFormat
  * @static
  * @return {Object} Format
+ * @category core
  */
 DataAPI.getDefaultFormat = function() {
     return DataAPI.formats[DataAPI.defaultFormat];
@@ -198,6 +202,7 @@ DataAPI.prototype = {
      * @method getAuthorizationUrl
      * @param {String} redirectUrl The user is redirected to this URL with "#_login" if authorization succeeded.
      * @return {String} Authorization URL
+     * @category core
      */
     getAuthorizationUrl: function(redirectUrl) {
         return this.o.baseUrl.replace(/\/*$/, '/') +
@@ -219,6 +224,7 @@ DataAPI.prototype = {
      * Get API version
      * @method getVersion
      * @return {String} API version
+     * @category core
      */
     getVersion: function() {
         return DataAPI.version;
@@ -229,6 +235,7 @@ DataAPI.prototype = {
      * @method getAppKey
      * @return {String} Application key
      *   This value is used for the session store.
+     * @category core
      */
     getAppKey: function() {
         return DataAPI.accessTokenKey + '_' + this.o.clientId;
@@ -239,6 +246,7 @@ DataAPI.prototype = {
      * @method findFormat
      * @param {String} mimeType MIME Type
      * @return {Object|null} Format. Return null if any format is not found.
+     * @category core
      */
     findFormat: function(mimeType) {
         if (! mimeType) {
@@ -258,6 +266,7 @@ DataAPI.prototype = {
      * Get current format of this object
      * @method getCurrentFormat
      * @return {Object} Format
+     * @category core
      */
     getCurrentFormat: function() {
         return DataAPI.formats[this.o.format] || DataAPI.getDefaultFormat();
@@ -268,6 +277,7 @@ DataAPI.prototype = {
      * @method serializeData
      * @param {Object} data The data to serialize
      * @return {String} Serialized data
+     * @category core
      */
     serializeData: function() {
         return this.getCurrentFormat().serialize.apply(this, arguments);
@@ -278,6 +288,7 @@ DataAPI.prototype = {
      * @method unserializeData
      * @param {String} data The data to unserialize
      * @return {Object} Unserialized data
+     * @category core
      */
     unserializeData: function() {
         return this.getCurrentFormat().unserialize.apply(this, arguments);
@@ -291,6 +302,7 @@ DataAPI.prototype = {
      *   @param {String} tokenData.expiresIn The number of seconds
      *     until access token becomes invalid
      *   @param {String} tokenData.sessionId [optional] session ID
+     * @category core
      */
     storeToken: function(tokenData) {
         var o = this.o;
@@ -324,6 +336,7 @@ DataAPI.prototype = {
      * Get token data via current session store.
      * @method getToken
      * @return {Object} Token data
+     * @category core
      */
     getToken: function() {
         var token,
@@ -367,6 +380,7 @@ DataAPI.prototype = {
      * Get authorization request header
      * @method getAuthorizationHeader
      * @return {String|null} Header string. Return null if api object has no token.
+     * @category core
      */
     getAuthorizationHeader: function() {
         return 'MTAuth accessToken=' + this.getToken();
@@ -385,6 +399,7 @@ DataAPI.prototype = {
      *       entry_id: {id: 1},
      *       comment_id: functioin(){ return 1; }
      *     });
+     * @category core
      */
     bindEndpointParams: function(route, params) {
         var k, v;
@@ -542,6 +557,7 @@ DataAPI.prototype = {
      * Create XMLHttpRequest by higher browser compatibility way
      * @method newXMLHttpRequest
      * @return {XMLHttpRequest} Created XMLHttpRequest
+     * @category core
      */
     newXMLHttpRequest: function() {
         return this._newXMLHttpRequestStandard() ||
@@ -585,6 +601,7 @@ DataAPI.prototype = {
      * @param {String|FormData} params Parameters to send with request
      * @param {Object|null} defaultParams System default parameters to merge to params
      * @return {XMLHttpRequest}
+     * @category core
      */
     sendXMLHttpRequest: function(xhr, method, url, params, defaultParams) {
         var k, headers, uk;
@@ -727,6 +744,7 @@ DataAPI.prototype = {
      *     api.listEntries(1, function() {
      *       // This is executed asynchronously
      *     });
+     * @category core
      */
     withOptions: function(option, func) {
         var k, result,
@@ -760,6 +778,7 @@ DataAPI.prototype = {
      * @return {XMLHttpRequest|null} Return XMLHttpRequest if request is sent
      *   via XMLHttpRequest. Return null if request is not sent
      *   via XMLHttpRequest (e.g. sent via iframe).
+     * @category core
      */
     request: function(method, endpoint) {
         var i, k, v, base,
@@ -1086,6 +1105,7 @@ DataAPI.prototype = {
      * @method on
      * @param {String} key Event name
      * @param {Function} callback Callback function
+     * @category core
      */
     on: DataAPI.on,
 
@@ -1094,6 +1114,7 @@ DataAPI.prototype = {
      * @method off
      * @param {String} key Event name
      * @param {Function} callback Callback function
+     * @category core
      */
     off: DataAPI.off,
 
@@ -1102,6 +1123,7 @@ DataAPI.prototype = {
      * First, run class level callbacks. Then, run instance level callbacks.
      * @method trigger
      * @param {String} key Event name
+     * @category core
      */
     trigger: function(key) {
         var i,
@@ -1181,6 +1203,7 @@ DataAPI.prototype = {
      *           ]
      *       }
      *     ]);
+     * @category core
      */
     generateEndpointMethods: function(endpoints) {
         for (var i = 0; i < endpoints.length; i++) {
@@ -1213,6 +1236,7 @@ DataAPI.prototype = {
      *     api.getDataViaYourExtensionModule(function(response) {
      *       // Do stuff
      *     });
+     * @category core
      */
     loadEndpoints: function(params) {
         var api = this;
