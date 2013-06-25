@@ -1274,7 +1274,7 @@ DataAPI.prototype = {
  **/
 
 /**
- * Fired on response code is 401
+ * Triggered on receiving the HTTP response code 401 (Authorization required).
  *
  * @event authorizationRequired
  * @param {Object} response A response object
