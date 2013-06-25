@@ -9,13 +9,15 @@ module.exports = function( grunt ) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
-        clean: [
-            "<%= concat.browser.dest %>",
-            "<%= Object.keys(uglify.all.files)[0] %>",
-            "<%= uglify.all.options.sourceMap %>"
-        ],
+        clean: {
+            "data-api": [
+                "<%= concat['data-api-browser'].dest %>",
+                "<%= Object.keys(uglify['data-api-browser'].files)[0] %>",
+                "<%= uglify['data-api-browser'].options.sourceMap %>"
+            ]
+        },
         concat: {
-            browser: {
+            "data-api-browser": {
                 dest: "dist/data-api/v1/js/all.js",
                 src: [
                     "src/data-api/v1/intro.js",
@@ -29,7 +31,7 @@ module.exports = function( grunt ) {
                     "src/data-api/v1/outro.js"
                 ]
             },
-            node: {
+            "data-api-node": {
                 dest: "lib/data-api/v1/node-all.js",
                 src: [
                     "src/data-api/v1/intro.js",
@@ -46,11 +48,13 @@ module.exports = function( grunt ) {
             }
         },
         watch: {
-            files: [ "src/**/*.js" ],
-            tasks: "dev"
+            "data-api": {
+                files: [ "src/**/*.js" ],
+                tasks: "dev"
+            }
         },
         uglify: {
-            all: {
+            "data-api-browser": {
                 files: {
                     "dist/data-api/v1/js/all.min.js": [ "dist/data-api/v1/js/all.js" ]
                 },
@@ -76,13 +80,13 @@ module.exports = function( grunt ) {
             }
         },
         jshint: {
-            browser: {
+            "data-api-browser": {
                 src: [
                     "src/data-api/v1/core.js"
                 ],
                 options: srcHintOptionsBrowser
             },
-            node: {
+            "data-api-node": {
                 src: [
                     "src/data-api/v1/core.js",
                     "src/data-api/v1/window.js",
