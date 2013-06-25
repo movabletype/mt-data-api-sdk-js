@@ -1228,3 +1228,37 @@ DataAPI.prototype = {
         });
     }
 };
+
+/**
+ * Triggered on initializing an instance
+ *
+ * @event initialize
+ **/
+
+/**
+ * Triggered on getting an error of a HTTP request
+ *
+ * @event error
+ * @param {Object} response A response object
+ *   @param {Number} response.code The HTTP response code
+ *   @param {String} response.message The error message
+ *   @param {Object} response.data The data exists only if a current error has optional data
+ * @example
+ *     api.on("error", function(response) {
+ *       console.log(response.message);
+ *     });
+ **/
+
+/**
+ * Fired on response code is 401
+ *
+ * @event authorizationRequired
+ * @param {Object} response A response object
+ *   @param {Number} response.code The HTTP response code
+ *   @param {Number} response.message The error message
+ * @example
+ *     api.on("authorizationRequired", function(response) {
+ *       // You will return to current URL after authorization succeeded.
+ *       location.href = api.getAuthorizationUrl(location.href);
+ *     });
+ **/
