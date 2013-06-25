@@ -996,7 +996,7 @@ DataAPI.prototype = {
                     doc    = window.document,
                     form   = doc.createElement('form'),
                     iframe = doc.createElement('iframe');
-                    
+
 
                 // Set up a form element
                 form.action        = base + endpoint;
