@@ -1,14 +1,14 @@
 {
-  "name": "movabletype-sdk",
+  "name": "mt-data-api-sdk",
   "version": "0.1.0",
-  "description": "Movable Type JavaScript SDK",
-  "homepage": "https://github.com/movabletype/movabletype-sdk-js",
+  "description": "Movable Type DataAPI SDK for JavaScript",
+  "homepage": "https://github.com/movabletype/mt-data-api-sdk-js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/movabletype/movabletype-sdk-js.git"
+    "url": "git://github.com/movabletype/mt-data-api-sdk-js.git"
   },
   "author": "Six Apart, Ltd.",
-  "main": "./lib/movabletype",
+  "main": "./lib/mt-data-api",
   "dependencies": {
     "form-data": "~0.0.10",
     "xmlhttprequest": "git://github.com/usualoma/node-XMLHttpRequest.git"
