@@ -339,12 +339,10 @@ DataAPI.prototype = {
      * @category core
      */
     getTokenData: function() {
-        var token,
-            o = this.o;
+        var token = this.tokenData,
+            o     = this.o;
 
-        if (! this.tokenData) {
-            token = null;
-
+        if (! token) {
             if (window.location && window.location.hash === '#_login') {
                 try {
                     token = this._updateTokenFromDefault();
@@ -360,14 +358,14 @@ DataAPI.prototype = {
                 catch (e) {
                 }
             }
-
-            if (token && (token.startTime + token.expiresIn < this._getCurrentEpoch())) {
-                Cookie.bake(this.getAppKey(), '', o.cookieDomain, o.cookiePath, new Date(0));
-                token = null;
-            }
-
-            this.tokenData = token;
         }
+
+        if (token && (token.startTime + token.expiresIn < this._getCurrentEpoch())) {
+            Cookie.bake(this.getAppKey(), '', o.cookieDomain, o.cookiePath, new Date(0));
+            token = null;
+        }
+
+        this.tokenData = token;
 
         if (! this.tokenData) {
             return null;
