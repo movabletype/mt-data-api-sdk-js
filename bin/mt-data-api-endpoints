@@ -6,8 +6,8 @@ var path     = require('path'),
     clientId = path.basename(process.argv[1]);
 
 if (process.argv.length < 4) {
-  console.error("Usage: " + clientId + " <baseUrl> <version>")
-  process.exit(1)
+    console.error("Usage: " + clientId + " <baseUrl> <version>")
+    process.exit(1)
 }
 
 var DataAPI = require(lib + '/movabletype').DataAPI['v' + process.argv[3]],
@@ -23,6 +23,10 @@ api.request('GET', 'endpoints', function(response) {
         keys = ['id', 'route', 'verb', 'resources'];
 
     for (var i = 0; i < originals.length; i++) {
+        if ((originals[i]['format'] || '').match(/\A(html)\z/i)) {
+            continue;
+        }
+
         e = {};
         for (var j = 0; j < keys.length; j++) {
             if (keys[j] in originals[i]) {
