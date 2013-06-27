@@ -6,19 +6,13 @@
         "resources": null
     },
     {
-        "id": "authorization",
-        "route": "/authorization",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "authentication",
+        "id": "authenticate",
         "route": "/authentication",
         "verb": "POST",
         "resources": null
     },
     {
-        "id": "token",
+        "id": "get_token",
         "route": "/token",
         "verb": "POST",
         "resources": null
@@ -50,7 +44,7 @@
         ]
     },
     {
-        "id": "list_blogs",
+        "id": "list_blogs_for_user",
         "route": "/users/:user_id/sites",
         "verb": "GET",
         "resources": null
@@ -108,7 +102,7 @@
         "resources": null
     },
     {
-        "id": "list_comments_for_entries",
+        "id": "list_comments_for_entry",
         "route": "/sites/:site_id/entries/:entry_id/comments",
         "verb": "GET",
         "resources": null
@@ -156,7 +150,7 @@
         "resources": null
     },
     {
-        "id": "list_trackbacks_for_entries",
+        "id": "list_trackbacks_for_entry",
         "route": "/sites/:site_id/entries/:entry_id/trackbacks",
         "verb": "GET",
         "resources": null
@@ -200,31 +194,31 @@
         "resources": null
     },
     {
-        "id": "stats_provider",
+        "id": "get_stats_provider",
         "route": "/sites/:site_id/stats/provider",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "stats_pageviews_for_path",
+        "id": "list_stats_pageviews_for_path",
         "route": "/sites/:site_id/stats/path/pageviews",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "stats_visits_for_path",
+        "id": "list_stats_visits_for_path",
         "route": "/sites/:site_id/stats/path/visits",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "stats_pageviews_for_date",
+        "id": "list_stats_pageviews_for_date",
         "route": "/sites/:site_id/stats/date/pageviews",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "stats_visits_for_date",
+        "id": "list_stats_visits_for_date",
         "route": "/sites/:site_id/stats/date/visits",
         "verb": "GET",
         "resources": null
