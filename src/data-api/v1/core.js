@@ -11,9 +11,10 @@
  *     (Available charactors: Alphabet, '_', '-')
  *   @param {String} options.baseUrl the CGI URL of the DataAPI
  *     (e.g. http://example.com/mt/mt-data-api.cgi)
- *   @param {String} options.cookieDomain
- *   @param {String} options.cookiePath
  *   @param {String} options.format
+ *   @param {String} options.sessionStore
+ *   @param {String} options.sessionDomain
+ *   @param {String} options.sessionPath
  *   @param {String} options.async
  *   @param {String} options.cache
  *   @param {String} options.disableFormData
@@ -25,9 +26,10 @@ var DataAPI = function(options) {
     this.o = {
         clientId: undefined,
         baseUrl: undefined,
-        cookieDomain: undefined,
-        cookiePath: undefined,
         format: undefined,
+        sessionStore: undefined,
+        sessionDomain: undefined,
+        sessionPath: undefined,
         async: true,
         cache: false,
         disableFormData: false
@@ -95,9 +97,19 @@ DataAPI.iframePrefix = 'mt_data_api_iframe_';
  * @property defaultFormat
  * @static
  * @private
- * @type Number
+ * @type String
  */
 DataAPI.defaultFormat = 'json';
+
+/**
+ * Default session store.
+ * @property defaultSessionStore
+ * @static
+ * @private
+ * @type String
+ */
+DataAPI.defaultSessionStore =
+    (window.document && window.document.cookie) ? 'cookie' : 'fs';
 
 /**
  * Class level callback function data.
@@ -125,6 +137,29 @@ DataAPI.formats = {
         unserialize: function() {
             return JSON.parse.apply(JSON, arguments);
         }
+    }
+};
+
+/**
+ * Available session stores.
+ * @property sessionStores
+ * @static
+ * @private
+ * @type Object
+ */
+DataAPI.sessionStores = {
+    cookie: {
+        save: function(name, data) {
+            var o = this.o;
+            return Cookie.bake(name, data, o.sessionDomain, o.sessionPath);
+        },
+        fetch: function(name) {
+            return Cookie.fetch(name).value;
+        },
+        remove: function(name) {
+            var o = this.o;
+            return Cookie.bake(name, '', o.sessionDomain, o.sessionPath, new Date(0));
+        },
     }
 };
 
@@ -178,10 +213,27 @@ DataAPI.off = function(key, callback) {
  * @param {Object} spec Format spec
  *   @param {String} spec.fileExtension Extension
  *   @param {String} spec.mimeType MIME type
+ *   @param {String} spec.serialize
+ *   @param {String} spec.unserialize
  * @category core
  */
 DataAPI.registerFormat = function(key, spec) {
     DataAPI.formats[key] = spec;
+};
+
+/**
+ * Register session store
+ * @method registerSessionStore
+ * @static
+ * @param {String} key Format name
+ * @param {Object} spec Format spec
+ *   @param {String} spec.save
+ *   @param {String} spec.restore
+ *   @param {String} spec.dispose
+ * @category core
+ */
+DataAPI.registerSessionStore = function(key, spec) {
+    DataAPI.sessionStores[key] = spec;
 };
 
 /**
@@ -193,6 +245,17 @@ DataAPI.registerFormat = function(key, spec) {
  */
 DataAPI.getDefaultFormat = function() {
     return DataAPI.formats[DataAPI.defaultFormat];
+};
+
+/**
+ * Get default session store of this class
+ * @method getDefaultSessionStore
+ * @static
+ * @return {Object} Format
+ * @category core
+ */
+DataAPI.getDefaultSessionStore = function() {
+    return DataAPI.sessionStores[DataAPI.defaultSessionStore];
 };
 
 DataAPI.prototype = {
@@ -295,6 +358,49 @@ DataAPI.prototype = {
     },
 
     /**
+     * Get current session store of this object.
+     * @method getCurrentSessionStore
+     * @return {Object} Session store
+     * @category core
+     */
+    getCurrentSessionStore: function() {
+        return DataAPI.sessionStores[this.o.sessionStore] ||
+            DataAPI.getDefaultSessionStore();
+    },
+
+    /**
+     * Save session data.
+     * @method saveSession
+     * @param {String} name The name of session
+     * @param {Object} data The data to save
+     * @category core
+     */
+    saveSessionData: function() {
+        return this.getCurrentSessionStore().save.apply(this, arguments);
+    },
+
+    /**
+     * Fetch session data.
+     * @method fetchSessionData
+     * @param {String} name The name of session
+     * @return {String} The data fetched
+     * @category core
+     */
+    fetchSessionData: function() {
+        return this.getCurrentSessionStore().fetch.apply(this, arguments);
+    },
+
+    /**
+     * Remove session data.
+     * @method removeSession
+     * @param {String} name The name of session
+     * @category core
+     */
+    removeSessionData: function() {
+        return this.getCurrentSessionStore().remove.apply(this, arguments);
+    },
+
+    /**
      * Store token data via current session store.
      * @method storeTokenData
      * @param {Object} tokenData The token data
@@ -305,13 +411,12 @@ DataAPI.prototype = {
      * @category core
      */
     storeTokenData: function(tokenData) {
-        var o = this.o;
         tokenData.startTime = this._getCurrentEpoch();
-        Cookie.bake(this.getAppKey(), this.serializeData(tokenData), o.cookieDomain, o.cookiePath);
+        this.saveSessionData(this.getAppKey(), this.serializeData(tokenData));
         this.tokenData = tokenData;
     },
 
-    _updateTokenFromDefault: function() {
+    _updateTokenFromDefaultCookie: function() {
         var defaultKey    = DataAPI.accessTokenKey,
             defaultCookie = Cookie.fetch(defaultKey),
             defaultToken;
@@ -339,13 +444,12 @@ DataAPI.prototype = {
      * @category core
      */
     getTokenData: function() {
-        var token = this.tokenData,
-            o     = this.o;
+        var token = this.tokenData;
 
         if (! token) {
             if (window.location && window.location.hash === '#_login') {
                 try {
-                    token = this._updateTokenFromDefault();
+                    token = this._updateTokenFromDefaultCookie();
                 }
                 catch (e) {
                 }
@@ -353,7 +457,7 @@ DataAPI.prototype = {
 
             if (! token) {
                 try {
-                    token = this.unserializeData(Cookie.fetch(this.getAppKey()).value);
+                    token = this.unserializeData(this.fetchSessionData(this.getAppKey()));
                 }
                 catch (e) {
                 }
@@ -361,7 +465,7 @@ DataAPI.prototype = {
         }
 
         if (token && (token.startTime + token.expiresIn < this._getCurrentEpoch())) {
-            Cookie.bake(this.getAppKey(), '', o.cookieDomain, o.cookiePath, new Date(0));
+            this.removeSessionData(this.getAppKey());
             token = null;
         }
 
