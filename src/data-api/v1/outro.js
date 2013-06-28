@@ -1,1 +1,1 @@
-})(typeof window === 'undefined' ? null : undefined);
+})(typeof window === 'undefined' ? null : window);
