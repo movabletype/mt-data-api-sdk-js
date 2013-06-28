@@ -25,7 +25,7 @@ var api     = new DataAPI({
   clientId: 'node'
 });
 
-api.authentication({username: 'USER_NAME', password: 'PASSWORD'}, function(response) {
+api.authenticate({username: 'USER_NAME', password: 'PASSWORD'}, function(response) {
   if (! response.error) {
     api.storeTokenData(response);
 
