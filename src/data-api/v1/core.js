@@ -218,7 +218,7 @@ DataAPI.off = function(key, callback) {
  * @category core
  */
 DataAPI.registerFormat = function(key, spec) {
-    DataAPI.formats[key] = spec;
+    this.formats[key] = spec;
 };
 
 /**
@@ -233,7 +233,7 @@ DataAPI.registerFormat = function(key, spec) {
  * @category core
  */
 DataAPI.registerSessionStore = function(key, spec) {
-    DataAPI.sessionStores[key] = spec;
+    this.sessionStores[key] = spec;
 };
 
 /**
@@ -244,7 +244,7 @@ DataAPI.registerSessionStore = function(key, spec) {
  * @category core
  */
 DataAPI.getDefaultFormat = function() {
-    return DataAPI.formats[DataAPI.defaultFormat];
+    return this.formats[this.defaultFormat];
 };
 
 /**
@@ -255,10 +255,11 @@ DataAPI.getDefaultFormat = function() {
  * @category core
  */
 DataAPI.getDefaultSessionStore = function() {
-    return DataAPI.sessionStores[DataAPI.defaultSessionStore];
+    return this.sessionStores[this.defaultSessionStore];
 };
 
 DataAPI.prototype = {
+    constructor: DataAPI.prototype.constructor,
 
     /**
      * Get authorization URL
@@ -280,7 +281,7 @@ DataAPI.prototype = {
     },
 
     _getNextIframeName: function() {
-        return DataAPI.iframePrefix + (++this.iframeId);
+        return this.constructor.iframePrefix + (++this.iframeId);
     },
 
     /**
@@ -290,7 +291,7 @@ DataAPI.prototype = {
      * @category core
      */
     getVersion: function() {
-        return DataAPI.version;
+        return this.constructor.version;
     },
 
     /**
@@ -301,7 +302,7 @@ DataAPI.prototype = {
      * @category core
      */
     getAppKey: function() {
-        return DataAPI.accessTokenKey + '_' + this.o.clientId;
+        return this.constructor.accessTokenKey + '_' + this.o.clientId;
     },
 
     /**
@@ -316,9 +317,9 @@ DataAPI.prototype = {
             return null;
         }
 
-        for (var k in DataAPI.formats) {
-            if (DataAPI.formats[k].mimeType === mimeType) {
-                return DataAPI.formats[k];
+        for (var k in this.constructor.formats) {
+            if (this.constructor.formats[k].mimeType === mimeType) {
+                return this.constructor.formats[k];
             }
         }
 
@@ -332,7 +333,8 @@ DataAPI.prototype = {
      * @category core
      */
     getCurrentFormat: function() {
-        return DataAPI.formats[this.o.format] || DataAPI.getDefaultFormat();
+        return this.constructor.formats[this.o.format] ||
+            this.constructor.getDefaultFormat();
     },
 
     /**
@@ -364,8 +366,8 @@ DataAPI.prototype = {
      * @category core
      */
     getCurrentSessionStore: function() {
-        return DataAPI.sessionStores[this.o.sessionStore] ||
-            DataAPI.getDefaultSessionStore();
+        return this.constructor.sessionStores[this.o.sessionStore] ||
+            this.constructor.getDefaultSessionStore();
     },
 
     /**
@@ -417,7 +419,7 @@ DataAPI.prototype = {
     },
 
     _updateTokenFromDefaultCookie: function() {
-        var defaultKey    = DataAPI.accessTokenKey,
+        var defaultKey    = this.constructor.accessTokenKey,
             defaultCookie = Cookie.fetch(defaultKey),
             defaultToken;
 
@@ -1004,7 +1006,7 @@ DataAPI.prototype = {
             defaultParams._ = new Date().getTime();
         }
 
-        if (currentFormat !== DataAPI.getDefaultFormat()) {
+        if (currentFormat !== this.constructor.getDefaultFormat()) {
             defaultParams.format = currentFormat.fileExtension;
         }
 
@@ -1232,7 +1234,9 @@ DataAPI.prototype = {
      * @param {Function} callback Callback function
      * @category core
      */
-    on: DataAPI.on,
+    on: function() {
+        this.constructor.on.apply(this, arguments);
+    },
 
     /**
      * Deregister callback from instance.
@@ -1241,7 +1245,9 @@ DataAPI.prototype = {
      * @param {Function} callback Callback function
      * @category core
      */
-    off: DataAPI.off,
+    off: function() {
+        this.constructor.off.apply(this, arguments);
+    },
 
     /**
      * Trigger event
@@ -1253,7 +1259,7 @@ DataAPI.prototype = {
     trigger: function(key) {
         var i,
             args      = Array.prototype.slice.call(arguments, 1),
-            callbacks = (DataAPI.callbacks[key] || []) // Class level
+            callbacks = (this.constructor.callbacks[key] || []) // Class level
                 .concat(this.callbacks[key] || []); // Instance level
 
         for (i = 0; i < callbacks.length; i++) {
