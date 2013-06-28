@@ -42,6 +42,7 @@ module.exports = function( grunt ) {
                     "src/data-api/v1/endpoints-intro.js",
                     "src/data-api/v1/endpoints.json",
                     "src/data-api/v1/endpoints-outro.js",
+                    "src/data-api/v1/sessionstore-fs.js",
                     "src/data-api/v1/exports.js",
                     "src/data-api/v1/outro.js"
                 ]
@@ -90,6 +91,7 @@ module.exports = function( grunt ) {
                 src: [
                     "src/data-api/v1/core.js",
                     "src/data-api/v1/window.js",
+                    "src/data-api/v1/sessionstore-fs.js",
                     "lib/movabletype.js"
                 ],
                 options: srcHintOptionsNode
