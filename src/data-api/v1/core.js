@@ -1107,6 +1107,12 @@ DataAPI.prototype = {
                     return;
                 }
 
+                if (endpoint === '/authentication' &&
+                    originalMethod.toLowerCase() === 'delete' &&
+                    ! response.error) {
+                    api.removeSessionData(api.getAppKey());
+                }
+
                 runCallback(response);
 
                 url = xhr.getResponseHeader('X-MT-Next-Phase-URL');
