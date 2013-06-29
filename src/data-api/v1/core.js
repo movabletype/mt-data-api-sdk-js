@@ -589,6 +589,9 @@ DataAPI.prototype = {
         if (type === 'undefined' || v === null || (type === 'number' && ! isFinite(v))) {
             return '';
         }
+        else if (type === 'boolean') {
+            return v ? '1' : '';
+        }
         else if (v instanceof Date) {
             return iso8601Date(v);
         }
