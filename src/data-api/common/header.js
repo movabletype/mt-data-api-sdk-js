@@ -10,7 +10,3 @@
  * Released under the MIT license
  * http://jquery.org/license
  */
-
-;(function(window, undefined) {
-
-"use strict";

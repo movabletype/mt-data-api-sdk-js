@@ -16,36 +16,14 @@ module.exports = function( grunt ) {
                 "<%= uglify['data-api-browser'].options.sourceMap %>"
             ]
         },
-        concat: {
+        preprocess: {
             "data-api-browser": {
                 dest: "dist/data-api/v1/js/mt-data-api.js",
-                src: [
-                    "src/data-api/v1/intro.js",
-                    "src/data-api/v1/core.js",
-                    "src/data-api/v1/cookie.js",
-                    "src/data-api/v1/json.js",
-                    "src/data-api/v1/endpoints-intro.js",
-                    "src/data-api/v1/endpoints.json",
-                    "src/data-api/v1/endpoints-outro.js",
-                    "src/data-api/v1/exports.js",
-                    "src/data-api/v1/outro.js"
-                ]
+                src: "src/data-api/v1/mt-data-api.js"
             },
             "data-api-node": {
                 dest: "lib/data-api/v1/node-mt-data-api.js",
-                src: [
-                    "src/data-api/v1/intro.js",
-                    "src/data-api/v1/window.js",
-                    "src/data-api/v1/core.js",
-                    "src/data-api/v1/cookie.js",
-                    "src/data-api/v1/json.js",
-                    "src/data-api/v1/endpoints-intro.js",
-                    "src/data-api/v1/endpoints.json",
-                    "src/data-api/v1/endpoints-outro.js",
-                    "src/data-api/v1/sessionstore-fs.js",
-                    "src/data-api/v1/exports.js",
-                    "src/data-api/v1/outro.js"
-                ]
+                src: "src/data-api/v1/node-mt-data-api.js"
             }
         },
         watch: {
@@ -83,15 +61,19 @@ module.exports = function( grunt ) {
         jshint: {
             "data-api-browser": {
                 src: [
-                    "src/data-api/v1/core.js"
+                    "src/data-api/common/core.js",
+                    "src/data-api/common/endpoints.js",
+                    "src/data-api/common/exports.js"
                 ],
                 options: srcHintOptionsBrowser
             },
             "data-api-node": {
                 src: [
-                    "src/data-api/v1/core.js",
-                    "src/data-api/v1/window.js",
-                    "src/data-api/v1/sessionstore-fs.js",
+                    "src/data-api/common/core.js",
+                    "src/data-api/common/endpoints.js",
+                    "src/data-api/common/exports.js",
+                    "src/data-api/common/window.js",
+                    "src/data-api/common/sessionstore-fs.js",
                     "lib/movabletype.js"
                 ],
                 options: srcHintOptionsNode
@@ -135,10 +117,10 @@ module.exports = function( grunt ) {
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-watch");
-    grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-preprocess");
 
     grunt.registerTask("default", "build");
-    grunt.registerTask("build", ["concat", "jshint", "uglify"]);
-    grunt.registerTask("dev", ["concat", "jshint"]);
+    grunt.registerTask("build", ["preprocess", "jshint", "uglify"]);
+    grunt.registerTask("dev", ["preprocess", "jshint"]);
 };

@@ -20,6 +20,7 @@
 
 	"globals": {
 		"window": true,
+		"module": true,
 		"Cookie": true,
 		"DataAPI": true
 	}
