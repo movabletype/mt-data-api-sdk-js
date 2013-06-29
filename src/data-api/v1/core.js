@@ -372,7 +372,7 @@ DataAPI.prototype = {
 
     /**
      * Save session data.
-     * @method saveSession
+     * @method saveSessionData
      * @param {String} name The name of session
      * @param {Object} data The data to save
      * @category core
@@ -394,7 +394,7 @@ DataAPI.prototype = {
 
     /**
      * Remove session data.
-     * @method removeSession
+     * @method removeSessionData
      * @param {String} name The name of session
      * @category core
      */
@@ -489,8 +489,8 @@ DataAPI.prototype = {
      */
     getAuthorizationHeader: function(key) {
         var tokenData = this.getTokenData();
-        if (tokenData && tokenData[key]) {
-            return 'MTAuth ' + key + '=' + tokenData[key];
+        if (tokenData) {
+            return 'MTAuth ' + key + '=' + (tokenData[key] || '');
         }
 
         return '';
@@ -732,7 +732,7 @@ DataAPI.prototype = {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        if (authHeader && ! defaultHeaders['X-MT-Authorization']) {
+        if (authHeader && ! ('X-MT-Authorization' in defaultHeaders)) {
             xhr.setRequestHeader('X-MT-Authorization', authHeader);
         }
 
@@ -891,7 +891,9 @@ DataAPI.prototype = {
             callback   = function(){},
             xhr        = null,
             viaXhr     = true,
+            tokenData  = this.getTokenData(),
             currentFormat     = this.getCurrentFormat(),
+            originalMethod    = method,
             originalArguments = Array.prototype.slice.call(arguments),
             defaultParams     = {},
             defaultHeaders    = {};
@@ -962,7 +964,7 @@ DataAPI.prototype = {
                 endpoint !== '/token';
         }
 
-        function retry() {
+        function retryWithAuthentication() {
             api.request('POST', '/token', function(response) {
                 var status, oldData;
                 if (response.error && response.error.code === 401) {
@@ -994,15 +996,19 @@ DataAPI.prototype = {
             return base + api._serializeParams(params);
         }
 
+        if (tokenData && ! tokenData.accessToken && endpoint !== '/token') {
+            return retryWithAuthentication();
+        }
 
         if (endpoint === '/token' || endpoint === '/authentication') {
-            (function() {
-                var authHeader = api.getAuthorizationHeader('sessionId');
-                if (authHeader) {
-                    defaultHeaders['X-MT-Authorization'] = authHeader;
-                }
-                defaultParams.clientId = api.o.clientId;
-            })();
+            if (tokenData && tokenData.sessionId) {
+                defaultHeaders['X-MT-Authorization'] =
+                    api.getAuthorizationHeader('sessionId');
+            }
+            else if (endpoint === '/token' && originalMethod.toLowerCase() === 'post') {
+                defaultHeaders['X-MT-Authorization'] = '';
+            }
+            defaultParams.clientId = api.o.clientId;
         }
 
         if (! this.o.cache) {
@@ -1011,6 +1017,11 @@ DataAPI.prototype = {
 
         if (currentFormat !== this.constructor.getDefaultFormat()) {
             defaultParams.format = currentFormat.fileExtension;
+        }
+
+        if (method.match(/^(put|delete)$/i)) {
+            defaultParams.__method = method;
+            method = 'POST';
         }
 
         for (i = 2; i < arguments.length; i++) {
@@ -1040,11 +1051,6 @@ DataAPI.prototype = {
 
         if (paramsList.length && (method.toLowerCase() === 'get' || paramsList.length >= 2)) {
             endpoint = appendParamsToURL(endpoint, paramsList.shift());
-        }
-
-        if (method.match(/^(put|delete)$/i)) {
-            defaultParams.__method = method;
-            method = 'POST';
         }
 
         if (paramsList.length) {
@@ -1102,7 +1108,7 @@ DataAPI.prototype = {
                 }
 
                 if (needToRetry(response)) {
-                    retry();
+                    retryWithAuthentication();
                     cleanup();
                     return;
                 }
@@ -1153,11 +1159,11 @@ DataAPI.prototype = {
 
 
                 params = params || {};
-                for (k in defaultHeaders) {
-                    params[k] = defaultHeaders[k];
-                }
                 if (authHeader) {
                     params['X-MT-Authorization'] = authHeader;
+                }
+                for (k in defaultHeaders) {
+                    params[k] = defaultHeaders[k];
                 }
                 params['X-MT-Requested-Via'] = 'IFRAME';
 
@@ -1217,7 +1223,7 @@ DataAPI.prototype = {
                     }
 
                     if (needToRetry(response)) {
-                        retry();
+                        retryWithAuthentication();
                         cleanup();
                         return;
                     }
