@@ -16,8 +16,6 @@
 	"undef": true,
 	"unused": true,
 
-	"es5": true,
-
 	"globals": {
 		"window": true,
 		"module": true,
