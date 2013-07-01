@@ -63,6 +63,7 @@ module.exports = function( grunt ) {
             "data-api-browser": {
                 src: [
                     "src/data-api/common/core.js",
+                    "src/data-api/common/cookie.js",
                     "src/data-api/common/endpoints.js",
                     "src/data-api/common/exports.js"
                 ],
@@ -71,6 +72,7 @@ module.exports = function( grunt ) {
             "data-api-node": {
                 src: [
                     "src/data-api/common/core.js",
+                    "src/data-api/common/cookie.js",
                     "src/data-api/common/endpoints.js",
                     "src/data-api/common/exports.js",
                     "src/data-api/common/window.js",

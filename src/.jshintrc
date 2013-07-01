@@ -1,5 +1,5 @@
 {
-    "strict": false,
+	"strict": false,
 	"quotmark": false,
 	"onevar": true,
 	"sub": true,
@@ -20,6 +20,8 @@
 		"window": true,
 		"module": true,
 		"Cookie": true,
-		"DataAPI": true
+		"DataAPI": true,
+		"escape": true,
+		"unescape": true
 	}
 }
