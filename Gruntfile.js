@@ -46,6 +46,7 @@ module.exports = function( grunt ) {
                         ascii_only: true
                     },
                     compress: {
+                        if_return: false,
                         hoist_funs: false,
                         join_vars: false,
                         loops: false,
