@@ -23,7 +23,7 @@ api.request('GET', 'endpoints', function(response) {
         keys = ['id', 'route', 'verb', 'resources'];
 
     for (var i = 0; i < originals.length; i++) {
-        if ((originals[i]['format'] || '').match(/\A(html)\z/i)) {
+        if ((originals[i]['format'] || '').match(/^(html)$/i)) {
             continue;
         }
 
