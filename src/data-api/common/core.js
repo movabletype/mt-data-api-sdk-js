@@ -114,8 +114,7 @@ DataAPI.defaultFormat = 'json';
  * @private
  * @type String
  */
-DataAPI.defaultSessionStore =
-    (window.document && window.document.cookie) ? 'cookie' : 'fs';
+DataAPI.defaultSessionStore = window.document ? 'cookie' : 'fs';
 
 /**
  * Class level callbacks function data.
