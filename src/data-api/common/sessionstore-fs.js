@@ -16,8 +16,13 @@
                 d = {},
                 newFile = true;
             if (existsSync(p)) {
-                newFile = false;
-                d = JSON.parse(fs.readFileSync(p, "utf8"));
+                try {
+                    d = JSON.parse(fs.readFileSync(p, "utf8"));
+                    newFile = false;
+                }
+                catch (e) {
+                    // Ignore
+                }
             }
             d[name] = data;
 
@@ -30,7 +35,12 @@
             var p = getPath(this.o),
                 d = {};
             if (existsSync(p)) {
-                d = JSON.parse(fs.readFileSync(p, "utf8"));
+                try {
+                    d = JSON.parse(fs.readFileSync(p, "utf8"));
+                }
+                catch (e) {
+                    // Ignore
+                }
             }
 
             return d[name];
