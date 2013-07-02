@@ -19,17 +19,20 @@ or
 ## Usage
 
 ```
-var DataAPI = require("mt-data-api").v1;
-var api     = new DataAPI({
+var DataAPI    = require("mt-data-api").v1;
+var api        = new DataAPI({
   baseUrl:  "http://example.com/mt/mt-data-api.cgi",
   clientId: "node"
 });
+var credential = {
+  username: "USER_NAME",
+  password: "PASSWORD",
+  remember: true
+};
 
-api.authenticate({username: "USER_NAME", password: "PASSWORD", remember: true}, function(response) {
+// Session information will be stored to "$HOME/.mt-data-api.json" by default.
+api.authenticate(credential, function(response) {
   if (! response.error) {
-    // Session information is stored to "$HOME/.mt-data-api.json" by default.
-    api.storeTokenData(response);
-
     api.listEntries(2, {status: "Draft"}, function(response) {
       // Do stuff
     });
