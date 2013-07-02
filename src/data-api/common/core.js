@@ -1125,6 +1125,13 @@ DataAPI.prototype = {
                     ! response.error) {
                     api.removeSessionData(api.getAppKey());
                 }
+                else if (! response.error && (
+                    (endpoint === '/authentication' &&
+                     originalMethod.toLowerCase() === 'post') ||
+                    (endpoint === '/token' &&
+                     originalMethod.toLowerCase() === 'post'))) {
+                    api.storeTokenData(response);
+                }
 
                 runCallback(response);
 
