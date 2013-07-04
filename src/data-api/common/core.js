@@ -164,7 +164,7 @@ DataAPI.sessionStores = {
         remove: function(name) {
             var o = this.o;
             Cookie.bake(name, '', o.sessionDomain, o.sessionPath, new Date(0));
-        },
+        }
     }
 };
 
