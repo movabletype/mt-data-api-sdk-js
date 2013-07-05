@@ -2,7 +2,7 @@
 
 var path     = require('path'),
     fs       = require('fs'),
-    lib      = path.join(path.dirname(path.dirname(fs.realpathSync(__filename))), 'lib'),
+    lib      = path.join(path.dirname(path.dirname(fs.realpathSync(__filename))), 'node-lib'),
     clientId = path.basename(process.argv[1]);
 
 if (process.argv.length < 4) {
