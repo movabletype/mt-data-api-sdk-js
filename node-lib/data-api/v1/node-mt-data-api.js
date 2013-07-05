@@ -206,7 +206,7 @@ DataAPI.sessionStores = {
         remove: function(name) {
             var o = this.o;
             Cookie.bake(name, '', o.sessionDomain, o.sessionPath, new Date(0));
-        },
+        }
     }
 };
 
@@ -217,6 +217,11 @@ DataAPI.sessionStores = {
  * @param {String} key Event name
  * @param {Function} callback Callback function
  * @category core
+ * @example
+ *     var callback = function() {
+ *       // Do stuff
+ *     };
+ *     DataAPI.on(eventName, callback);
  */
 DataAPI.on = function(key, callback) {
     if (! this.callbacks[key]) {
@@ -233,6 +238,8 @@ DataAPI.on = function(key, callback) {
  * @param {String} key Event name
  * @param {Function} callback Callback function
  * @category core
+ * @example
+ *     DataAPI.off(eventName, callback);
  */
 DataAPI.off = function(key, callback) {
     var i, callbacks;
@@ -927,8 +934,8 @@ DataAPI.prototype = {
      * @param {String} endpoint Endpoint to request
      * @param {String|Object} [queryParameter]
      * @param {String|Object|HTMLFormElement|FormData} [requestData]
-     *   @param {String|Object|HTMLFormElement} [requestData.{requires-json-text}] Can specify json-text value by string or object or HTMLFormElement. Serialize automatically if object or HTMLFormElement is passed.
-     *   @param {HTMLInputElement|File} [requestData.{requires-file}] Can specify file value by HTMLInputElement or File object.
+     *   @param {String|Object|HTMLFormElement} [requestData.{the-key-requires-json-text}] Can specify json-text value by string or object or HTMLFormElement. Serialize automatically if object or HTMLFormElement is passed.
+     *   @param {HTMLInputElement|File} [requestData.{the-key-requires-file}] Can specify file value by HTMLInputElement or File object.
      * @param {Function} [callback]
      * @return {XMLHttpRequest|null} Return XMLHttpRequest if request is sent
      *   via XMLHttpRequest. Return null if request is not sent
@@ -1303,6 +1310,11 @@ DataAPI.prototype = {
      * @param {String} key Event name
      * @param {Function} callback Callback function
      * @category core
+     * @example
+     *     var callback = function() {
+     *       // Do stuff
+     *     };
+     *     api.on(eventName, callback);
      */
     on: function() {
         this.constructor.on.apply(this, arguments);
@@ -1314,6 +1326,8 @@ DataAPI.prototype = {
      * @param {String} key Event name
      * @param {Function} callback Callback function
      * @category core
+     * @example
+     *     api.off(eventName, callback);
      */
     off: function() {
         this.constructor.off.apply(this, arguments);
