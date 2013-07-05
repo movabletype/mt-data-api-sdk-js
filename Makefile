@@ -3,7 +3,7 @@ all:
 	make build
 
 clean:
-	-rm -rf dist
+	-rm -rf node-lib mt-static
 	-rm -rf node_modules
 	-find . -name '.DS_Store' | xargs rm
 

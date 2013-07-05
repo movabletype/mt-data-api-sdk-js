@@ -11,7 +11,9 @@ module.exports = function( grunt ) {
         pkg: grunt.file.readJSON("package.json"),
         clean: {
             "data-api": [
-                "<%= concat['data-api-browser'].dest %>",
+                "<%= preprocess['data-api-node'].dest %>",
+                "<%= preprocess['node-bootstrap'].dest %>",
+                "<%= preprocess['data-api-browser'].dest %>",
                 "<%= Object.keys(uglify['data-api-browser'].files)[0] %>",
                 "<%= uglify['data-api-browser'].options.sourceMap %>"
             ]
@@ -24,6 +26,10 @@ module.exports = function( grunt ) {
             "data-api-node": {
                 dest: "node-lib/data-api/v1/node-mt-data-api.js",
                 src: "src/data-api/v1/node-mt-data-api.js"
+            },
+            "node-bootstrap": {
+                dest: "node-lib/bootstrap.js",
+                src: "src/node/bootstrap.js"
             }
         },
         watch: {
@@ -78,7 +84,7 @@ module.exports = function( grunt ) {
                     "src/data-api/common/exports.js",
                     "src/data-api/common/window.js",
                     "src/data-api/common/sessionstore-fs.js",
-                    "node-lib/mt-data-api.js"
+                    "src/node/bootstrap.js"
                 ],
                 options: srcHintOptionsNode
             },
