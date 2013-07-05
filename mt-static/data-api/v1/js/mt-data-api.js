@@ -1000,19 +1000,14 @@ DataAPI.prototype = {
 
         function retryWithAuthentication() {
             api.request('POST', '/token', function(response) {
-                var status;
-
                 if (response.error) {
-                    status = runCallback(response);
-                    if (status !== false && response.error.code === 401) {
-                        api.trigger('authorizationRequired', response);
-                    }
+                    return true;
                 }
                 else {
                     api.storeTokenData(response);
                     api.request.apply(api, originalArguments);
+                    return false;
                 }
-                return false;
             });
         }
 
@@ -1117,7 +1112,7 @@ DataAPI.prototype = {
                     return;
                 }
 
-                var response, mimeType, format, url;
+                var response, mimeType, format, url, callbackResult;
 
                 try {
                     mimeType = xhr.getResponseHeader('Content-Type');
@@ -1156,7 +1151,11 @@ DataAPI.prototype = {
                     api.storeTokenData(response);
                 }
 
-                runCallback(response);
+                callbackResult = runCallback(response);
+
+                if (callbackResult !== false && response.error.code === 401) {
+                    api.trigger('authorizationRequired', response);
+                }
 
                 url = xhr.getResponseHeader('X-MT-Next-Phase-URL');
                 if (url) {
