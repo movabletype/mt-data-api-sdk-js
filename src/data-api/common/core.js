@@ -222,11 +222,11 @@ DataAPI.off = function(key, callback) {
  * @method registerFormat
  * @static
  * @param {String} key Format name
- * @param {Object} spec Format spec
+ * @param {Object} spec
  *   @param {String} spec.fileExtension Extension
  *   @param {String} spec.mimeType MIME type
- *   @param {String} spec.serialize
- *   @param {String} spec.unserialize
+ *   @param {String} spec.serialize Serializing method
+ *   @param {String} spec.unserialize Unserializing method
  * @category core
  */
 DataAPI.registerFormat = function(key, spec) {
@@ -237,11 +237,11 @@ DataAPI.registerFormat = function(key, spec) {
  * Register session store.
  * @method registerSessionStore
  * @static
- * @param {String} key Format name
- * @param {Object} spec Format spec
- *   @param {String} spec.save
- *   @param {String} spec.restore
- *   @param {String} spec.dispose
+ * @param {String} key Session store name
+ * @param {Object} spec
+ *   @param {String} spec.save Saving method
+ *   @param {String} spec.restore Restoring method
+ *   @param {String} spec.dispose Disposing method
  * @category core
  */
 DataAPI.registerSessionStore = function(key, spec) {
