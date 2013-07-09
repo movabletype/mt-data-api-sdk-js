@@ -11,18 +11,18 @@
  *     This value allows alphanumeric, (_)underscore, (-)dash.
  *   @param {String} options.baseUrl The absolute CGI URL of the DataAPI.
  *     (e.g. http://example.com/mt/mt-data-api.cgi)
- *   @param {String} options.format [optional] The format to serialize.
- *   @param {String} options.sessionStore [optional] The session store.
+ *   @param {String} [options.format] The format to serialize.
+ *   @param {String} [options.sessionStore] The session store.
  *     In browser, the cookie is used by default.
- *   @param {String} options.sessionDomain [optional] The session domain.
+ *   @param {String} [options.sessionDomain] The session domain.
  *     When using the cookie, this value is used as cookie domain.
- *   @param {String} options.sessionPath [optional] The session path
+ *   @param {String} [options.sessionPath] The session path
  *     When using the cookie, this value is used as cookie path.
- *   @param {String} options.async [optional] If true, use asynchronous
+ *   @param {String} [options.async] If true, use asynchronous
  *      XMLHttpRequest. The default value is the true.
- *   @param {String} options.cache [optional] If false, add an additional
+ *   @param {String} [options.cache] If false, add an additional
  *      parameter to request to avoid cache. The default value is the false.
- *   @param {String} options.disableFormData [optional] If false, use FormData
+ *   @param {String} [options.disableFormData] If false, use FormData
  *      class when available that. The default value is the false.
  */
 var DataAPI = function(options) {
@@ -421,7 +421,7 @@ DataAPI.prototype = {
      *   @param {String} tokenData.accessToken access token
      *   @param {String} tokenData.expiresIn The number of seconds
      *     until access token becomes invalid
-     *   @param {String} tokenData.sessionId [optional] session ID
+     *   @param {String} [tokenData.sessionId] session ID
      * @category core
      */
     storeTokenData: function(tokenData) {
@@ -887,7 +887,7 @@ DataAPI.prototype = {
     },
 
     /**
-     * Execute function with specified options.
+     * Send a request to the endpoint with specified parameters.
      * @method request
      * @param {String} method Request method
      * @param {String} endpoint Endpoint to request
