@@ -28,18 +28,18 @@
  *     This value allows alphanumeric, (_)underscore, (-)dash.
  *   @param {String} options.baseUrl The absolute CGI URL of the DataAPI.
  *     (e.g. http://example.com/mt/mt-data-api.cgi)
- *   @param {String} options.format [optional] The format to serialize.
- *   @param {String} options.sessionStore [optional] The session store.
+ *   @param {String} [options.format] The format to serialize.
+ *   @param {String} [options.sessionStore] The session store.
  *     In browser, the cookie is used by default.
- *   @param {String} options.sessionDomain [optional] The session domain.
+ *   @param {String} [options.sessionDomain] The session domain.
  *     When using the cookie, this value is used as cookie domain.
- *   @param {String} options.sessionPath [optional] The session path
+ *   @param {String} [options.sessionPath] The session path
  *     When using the cookie, this value is used as cookie path.
- *   @param {String} options.async [optional] If true, use asynchronous
+ *   @param {String} [options.async] If true, use asynchronous
  *      XMLHttpRequest. The default value is the true.
- *   @param {String} options.cache [optional] If false, add an additional
+ *   @param {String} [options.cache] If false, add an additional
  *      parameter to request to avoid cache. The default value is the false.
- *   @param {String} options.disableFormData [optional] If false, use FormData
+ *   @param {String} [options.disableFormData] If false, use FormData
  *      class when available that. The default value is the false.
  */
 var DataAPI = function(options) {
@@ -239,11 +239,11 @@ DataAPI.off = function(key, callback) {
  * @method registerFormat
  * @static
  * @param {String} key Format name
- * @param {Object} spec Format spec
+ * @param {Object} spec
  *   @param {String} spec.fileExtension Extension
  *   @param {String} spec.mimeType MIME type
- *   @param {String} spec.serialize
- *   @param {String} spec.unserialize
+ *   @param {String} spec.serialize Serializing method
+ *   @param {String} spec.unserialize Unserializing method
  * @category core
  */
 DataAPI.registerFormat = function(key, spec) {
@@ -254,11 +254,11 @@ DataAPI.registerFormat = function(key, spec) {
  * Register session store.
  * @method registerSessionStore
  * @static
- * @param {String} key Format name
- * @param {Object} spec Format spec
- *   @param {String} spec.save
- *   @param {String} spec.restore
- *   @param {String} spec.dispose
+ * @param {String} key Session store name
+ * @param {Object} spec
+ *   @param {String} spec.save Saving method
+ *   @param {String} spec.restore Restoring method
+ *   @param {String} spec.dispose Disposing method
  * @category core
  */
 DataAPI.registerSessionStore = function(key, spec) {
@@ -438,7 +438,7 @@ DataAPI.prototype = {
      *   @param {String} tokenData.accessToken access token
      *   @param {String} tokenData.expiresIn The number of seconds
      *     until access token becomes invalid
-     *   @param {String} tokenData.sessionId [optional] session ID
+     *   @param {String} [tokenData.sessionId] session ID
      * @category core
      */
     storeTokenData: function(tokenData) {
@@ -904,7 +904,7 @@ DataAPI.prototype = {
     },
 
     /**
-     * Execute function with specified options.
+     * Send a request to the endpoint with specified parameters.
      * @method request
      * @param {String} method Request method
      * @param {String} endpoint Endpoint to request
