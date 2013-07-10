@@ -63,7 +63,7 @@ window = {
  *   @param {String} [options.async] If true, use asynchronous
  *      XMLHttpRequest. The default value is the true.
  *   @param {String} [options.cache] If false, add an additional
- *      parameter to request to avoid cache. The default value is the false.
+ *      parameter "_" to request to avoid cache. The default value is the true.
  *   @param {String} [options.disableFormData] If false, use FormData
  *      class when available that. The default value is the false.
  */
@@ -79,7 +79,7 @@ var DataAPI = function(options) {
         sessionDomain: undefined,
         sessionPath: undefined,
         async: true,
-        cache: false,
+        cache: true,
         disableFormData: false
     };
     for (k in options) {
