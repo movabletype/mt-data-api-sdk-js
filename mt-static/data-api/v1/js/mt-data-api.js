@@ -15,31 +15,6 @@
 
 "use strict";
 
-window = {
-    XMLHttpRequest: require('xmlhttprequest').XMLHttpRequest,
-    FormData: require('form-data'),
-    File: require('stream').Stream
-};
-(function() {
-    var fs = require('fs'),
-        _append = window.FormData.prototype.append;
-
-    window.FormData.prototype.append = function(field, value, options) {
-        if (! options && value.hasOwnProperty('fd')) {
-            try {
-                options = {knownLength: fs.statSync(value.path).size};
-            }
-            catch (e) {
-            }
-        }
-
-        var result  = _append.call(this, field, value, options);
-        this.length = this.getLengthSync();
-
-        return result;
-    };
-})();
-
 /**
  * @namespace MT
  */
@@ -156,8 +131,7 @@ DataAPI.defaultFormat = 'json';
  * @private
  * @type String
  */
-DataAPI.defaultSessionStore =
-    (window.document && window.document.cookie) ? 'cookie' : 'fs';
+DataAPI.defaultSessionStore = window.document ? 'cookie' : 'fs';
 
 /**
  * Class level callbacks function data.
@@ -480,6 +454,8 @@ DataAPI.prototype = {
             return null;
         }
 
+        Cookie.bake(defaultKey, '', undefined, '/', new Date(0));
+
         try {
             defaultToken = this.unserializeData(defaultCookie.value);
         }
@@ -488,7 +464,6 @@ DataAPI.prototype = {
         }
 
         this.storeTokenData(defaultToken);
-        Cookie.bake(defaultKey, '', undefined, '/', new Date(0));
         return defaultToken;
     },
 
@@ -1021,9 +996,9 @@ DataAPI.prototype = {
             api.request('POST', '/token', function(response) {
                 var status;
 
-                if (response.error && response.error.code === 401) {
+                if (response.error) {
                     status = runCallback(response);
-                    if (status !== false) {
+                    if (status !== false && response.error.code === 401) {
                         api.trigger('authorizationRequired', response);
                     }
                 }
@@ -2290,67 +2265,6 @@ DataAPI.on('initialize', function() {
 
     );
 });
-
-(function() {
-    var fs   = require("fs"),
-        path = require("path");
-
-    function getPath(o) {
-        return o.sessionPath || path.join(process.env["HOME"], ".mt-data-api.json");
-    }
-
-    function existsSync(p) {
-        return !!fs.existsSync ? fs.existsSync(p) : path.existsSync(p);
-    }
-
-    DataAPI.registerSessionStore('fs', {
-        save: function(name, data) {
-            var p = getPath(this.o),
-                d = {},
-                newFile = true;
-            if (existsSync(p)) {
-                try {
-                    d = JSON.parse(fs.readFileSync(p, "utf8"));
-                    newFile = false;
-                }
-                catch (e) {
-                    // Ignore
-                }
-            }
-            d[name] = data;
-
-            fs.writeFileSync(p, JSON.stringify(d), "utf8");
-            if (newFile) {
-                fs.chmodSync(p, parseInt("600", 8));
-            }
-        },
-        fetch: function(name) {
-            var p = getPath(this.o),
-                d = {};
-            if (existsSync(p)) {
-                try {
-                    d = JSON.parse(fs.readFileSync(p, "utf8"));
-                }
-                catch (e) {
-                    // Ignore
-                }
-            }
-
-            return d[name];
-        },
-        remove: function(name) {
-            var p = getPath(this.o),
-                d = {};
-            if (existsSync(p)) {
-                d = JSON.parse(fs.readFileSync(p, "utf8"));
-                if (name in d) {
-                    delete d[name];
-                    fs.writeFileSync(p, JSON.stringify(d), "utf8");
-                }
-            }
-        },
-    });
-})();
 
 window.MT         = window.MT || {};
 window.MT.DataAPI = window.MT.DataAPI || DataAPI;

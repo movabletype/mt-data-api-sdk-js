@@ -2,7 +2,7 @@
 
 var path     = require('path'),
     fs       = require('fs'),
-    lib      = path.join(path.dirname(path.dirname(fs.realpathSync(__filename))), 'lib'),
+    lib      = path.join(path.dirname(path.dirname(fs.realpathSync(__filename))), 'node-lib'),
     clientId = path.basename(process.argv[1]);
 
 if (process.argv.length < 4) {
@@ -10,7 +10,7 @@ if (process.argv.length < 4) {
     process.exit(1)
 }
 
-var DataAPI = require(lib + '/mt-data-api')['v' + process.argv[3]],
+var DataAPI = require(lib + '/bootstrap')['v' + process.argv[3]],
     api     = new DataAPI({
         baseUrl: process.argv[2],
         clientId: clientId
