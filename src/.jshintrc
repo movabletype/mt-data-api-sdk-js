@@ -23,6 +23,7 @@
 		"DataAPI": true,
 		"escape": true,
 		"unescape": true,
-		"console": true
+		"console": true,
+		"sjcl": true
 	}
 }

@@ -72,7 +72,9 @@ module.exports = function( grunt ) {
                     "src/data-api/common/core.js",
                     "src/data-api/common/cookie.js",
                     "src/data-api/common/endpoints.js",
-                    "src/data-api/common/exports.js"
+                    "src/data-api/common/exports.js",
+                    "src/data-api/common/sessionstore-cookie.js",
+                    "src/data-api/common/sessionstore-cookie-encrypted.js"
                 ],
                 options: srcHintOptionsBrowser
             },
@@ -83,6 +85,8 @@ module.exports = function( grunt ) {
                     "src/data-api/common/endpoints.js",
                     "src/data-api/common/exports.js",
                     "src/data-api/common/window.js",
+                    "src/data-api/common/sessionstore-cookie.js",
+                    "src/data-api/common/sessionstore-cookie-encrypted.js",
                     "src/data-api/common/sessionstore-fs.js",
                     "src/node/bootstrap.js"
                 ],
@@ -121,6 +125,58 @@ module.exports = function( grunt ) {
             fs.writeFileSync(dest, stdout, "utf8");
 
             done();
+        });
+    });
+
+    grunt.registerTask("update-sjcl-js", function() {
+        var done      = this.async(),
+            fs        = require("fs"),
+            path      = require("path"),
+            exec      = require("child_process").exec,
+            base      = path.dirname(fs.realpathSync(__filename)),
+            src       = path.join(base, "deps", "sjcl", "core.js"),
+            dest      = path.join(base, "src", "data-api", "common", "sjcl.js"),
+            configure = [
+                path.join(base, "deps", "sjcl", "configure"),
+                "--with-aes",
+                "--with-codecString",
+                "--with-sha256",
+                "--with-random",
+                "--with-bitArray",
+                "--with-convenience",
+                "--with-ccm",
+                "--with-pbkdf2",
+                "--with-hmac",
+                "--with-codecBase64",
+                "--without-ocb2",
+                "--without-codecHex"
+            ].join(" "),
+            make      = [
+                "make",
+                "-C",
+                path.join(base, "deps", "sjcl")
+            ].join(" ");
+
+        exec(configure, function(err, stdout, stderr) {
+            if (err) {
+                console.error(stderr);
+                return done(false);
+            }
+
+            console.log(stdout);
+
+            exec(make, function(err, stdout, stderr) {
+                if (err) {
+                    console.error(stderr);
+                    return done(false);
+                }
+
+                console.log(stdout);
+
+                fs.writeFileSync(dest, fs.readFileSync(src), "utf8");
+
+                done();
+            });
         });
     });
 

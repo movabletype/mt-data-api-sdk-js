@@ -114,7 +114,7 @@ DataAPI.defaultFormat = 'json';
  * @private
  * @type String
  */
-DataAPI.defaultSessionStore = window.document ? 'cookie' : 'fs';
+DataAPI.defaultSessionStore = window.document ? 'cookie-encrypted' : 'fs';
 
 /**
  * Class level callbacks function data.
@@ -152,21 +152,9 @@ DataAPI.formats = {
  * @private
  * @type Object
  */
-DataAPI.sessionStores = {
-    cookie: {
-        save: function(name, data) {
-            var o = this.o;
-            Cookie.bake(name, data, o.sessionDomain, o.sessionPath);
-        },
-        fetch: function(name) {
-            return Cookie.fetch(name).value;
-        },
-        remove: function(name) {
-            var o = this.o;
-            Cookie.bake(name, '', o.sessionDomain, o.sessionPath, new Date(0));
-        }
-    }
-};
+DataAPI.sessionStores = {};
+// @include ../common/sessionstore-cookie.js
+// @include ../common/sessionstore-cookie-encrypted.js
 
 /**
  * Register callback to class.
@@ -490,13 +478,7 @@ DataAPI.prototype = {
             delete token.expiresIn;
         }
 
-        this.tokenData = token;
-
-        if (! this.tokenData) {
-            return null;
-        }
-
-        return this.tokenData;
+        return this.tokenData = token || null;
     },
 
     /**
@@ -979,7 +961,8 @@ DataAPI.prototype = {
         function needToRetry(response) {
             return response.error &&
                 response.error.code === 401 &&
-                endpoint !== '/token';
+                endpoint !== '/token' &&
+                endpoint !== '/authentication';
         }
 
         function retryWithAuthentication() {
@@ -1137,7 +1120,9 @@ DataAPI.prototype = {
 
                 callbackResult = runCallback(response);
 
-                if (callbackResult !== false && response.error && response.error.code === 401) {
+                if (callbackResult !== false &&
+                    response.error && response.error.code === 401 &&
+                    endpoint !== '/authentication') {
                     api.trigger('authorizationRequired', response);
                 }
 
