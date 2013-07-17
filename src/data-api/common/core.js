@@ -419,7 +419,11 @@ DataAPI.prototype = {
         }
 
         tokenData.startTime = this._getCurrentEpoch();
-        this.saveSessionData(this.getAppKey(), this.serializeData(tokenData));
+        this.saveSessionData(
+            this.getAppKey(),
+            this.serializeData(tokenData),
+            tokenData.sessionId && tokenData.remember
+        );
         this.tokenData = tokenData;
     },
 

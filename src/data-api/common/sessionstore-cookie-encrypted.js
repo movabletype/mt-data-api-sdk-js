@@ -13,11 +13,12 @@ if (! localStorage) {
 }
 else {
     DataAPI.sessionStores['cookie-encrypted'] = {
-        save: function(name, data) {
-            var key = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0)),
-                o   = this.o;
+        save: function(name, data, remember) {
+            var key     = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0)),
+                o       = this.o,
+                expires = remember ? new Date(new Date().getTime() + 315360000000) : undefined; // after 10 years
 
-            Cookie.bake(name, key, o.sessionDomain, o.sessionPath);
+            Cookie.bake(name, key, o.sessionDomain, o.sessionPath, expires);
             localStorage.setItem(name, sjcl.encrypt(key, data));
         },
         fetch: function(name) {
