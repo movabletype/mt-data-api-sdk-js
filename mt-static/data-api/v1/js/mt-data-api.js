@@ -2910,7 +2910,7 @@ DataAPI.prototype = {
                     response = {
                         error: {
                             code:    parseInt(xhr.status, 10),
-                            message: xhr.statusText
+                            message: xhr.statusText || 'Communication Error'
                         }
                     };
                 }
