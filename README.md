@@ -19,8 +19,10 @@ or
 ## Usage
 
 ```
-var DataAPI    = require("mt-data-api-sdk").v1;
-var api        = new DataAPI({
+var MT = {
+    DataAPI: require("mt-data-api-sdk")
+};
+var api = new MT.DataAPI({
   baseUrl:  "http://example.com/mt/mt-data-api.cgi",
   clientId: "node"
 });
