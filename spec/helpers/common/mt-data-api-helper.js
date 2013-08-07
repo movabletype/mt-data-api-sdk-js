@@ -8,20 +8,32 @@ function itWithMt() {
 }
 
 function newDataAPI(options) {
-    var opts = {
-        baseUrl:  dataApiBaseUrl,
-        clientId: "Test",
-        loadPluginEndpoints: false
-    };
+    var api,
+        opts = {
+            baseUrl:  dataApiBaseUrl,
+            clientId: "Test",
+            loadPluginEndpoints: false
+        };
+
     if (options) {
         for (k in options) {
             opts[k] = options[k];
         }
     }
-    return new MT.DataAPI(opts);
+
+    api = new MT.DataAPI(opts);
+
+    api.removeSessionData(api.getAppKey());
+
+    return api;
+}
+
+function cleanupSession() {
+    newDataAPI();
 }
 
 if (typeof global !== 'undefined') {
-    global.itWithMt   = itWithMt;
-    global.newDataAPI = newDataAPI;
+    global.itWithMt      = itWithMt;
+    global.newDataAPI    = newDataAPI;
+    global.cleanupSession = cleanupSession;
 }

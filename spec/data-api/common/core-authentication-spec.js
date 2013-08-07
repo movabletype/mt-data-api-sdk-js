@@ -6,7 +6,7 @@ describe("DataAPI Authorization", function(){
             .andCallFake(function(xhr, method, url) {
                 urls.push(url);
                 return xhr;
-            });;
+            });
 
         var api = newDataAPI();
         api.storeTokenData({});

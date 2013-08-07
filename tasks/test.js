@@ -72,16 +72,24 @@ module.exports = function( grunt ) {
     });
 
     grunt.registerTask("check-jasmine-node-result", function() {
-        var fs     = require("fs"),
-            report = "reports/node/TEST-DataAPI.xml",
-            status;
+        var path   = require("path"),
+            fs     = require("fs"),
+            dir    = grunt.config.get("jasmine_node.jUnit.savePath"),
+            files  = fs.readdirSync(dir),
+            status = true;
 
-        try {
-            status = /failures="0"/.test(fs.readFileSync(report));
-        }
-        catch (e) {
-            status = false;
-        }
+        files.forEach(function(f) {
+            if (! status || ! /xml$/i.test(f)) {
+                return;
+            }
+
+            try {
+                status = /failures="0"/.test(fs.readFileSync(path.join(dir, f)));
+            }
+            catch (e) {
+                status = false;
+            }
+        });
 
         if (! status) {
             stopMovableTypeServer();

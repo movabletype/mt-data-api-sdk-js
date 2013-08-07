@@ -66,6 +66,8 @@ window = {
  *      parameter "_" to request to avoid cache. The default value is the true.
  *   @param {Boolean} [options.loadPluginEndpoints] If true, load endpoint data
  *      extended by plugin and generate methods to access that endpoint automatically.
+ *   @param {Boolean} [options.suppressResponseCodes] If true, add 
+ *      suppressResponseCodes parameter to each request
  *   @param {Boolean(} [options.disableFormData] If false, use FormData
  *      class when available that. The default value is the false.
  */
@@ -83,6 +85,7 @@ var DataAPI = function(options) {
         async: true,
         cache: true,
         loadPluginEndpoints: true,
+        suppressResponseCodes: false,
         disableFormData: false
     };
     for (k in options) {
@@ -2834,6 +2837,10 @@ DataAPI.prototype = {
                 defaultHeaders['X-MT-Authorization'] = '';
             }
             defaultParams.clientId = api.o.clientId;
+        }
+
+        if (this.o.suppressResponseCodes) {
+            defaultParams.suppressResponseCodes = true;
         }
 
         if (! this.o.cache) {

@@ -1,6 +1,9 @@
 describe("DataAPI Constructor", function(){
+    beforeEach(function() {
+        cleanupSession();
+    });
 
-    it("should be created MT.DataAPI with baseUrl and clientId", function(){
+    it("should be created successfully MT.DataAPI with baseUrl and clientId", function(){
         spyOn(MT.DataAPI.prototype, 'loadEndpoints');
 
         expect(function() {
@@ -74,4 +77,15 @@ describe("DataAPI Constructor", function(){
         expect(api.getEndpointTest).not.toBeDefined();
     });
 
+    it("should be created successfully MT.DataAPI with suppressResponseCodes option", function(){
+        spyOn(MT.DataAPI.prototype, 'loadEndpoints');
+
+        expect(function() {
+            var api = new MT.DataAPI({
+                baseUrl: dataApiBaseUrl,
+                clientId: "Test",
+                suppressResponseCodes: true
+            });
+        }).not.toThrow();
+    });
 });
