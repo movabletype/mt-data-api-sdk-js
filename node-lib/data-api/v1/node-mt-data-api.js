@@ -60,11 +60,13 @@ window = {
  *     When using the cookie, this value is used as cookie domain.
  *   @param {String} [options.sessionPath] The session path
  *     When using the cookie, this value is used as cookie path.
- *   @param {String} [options.async] If true, use asynchronous
+ *   @param {Boolean} [options.async] If true, use asynchronous
  *      XMLHttpRequest. The default value is the true.
- *   @param {String} [options.cache] If false, add an additional
+ *   @param {Boolean} [options.cache] If false, add an additional
  *      parameter "_" to request to avoid cache. The default value is the true.
- *   @param {String} [options.disableFormData] If false, use FormData
+ *   @param {Boolean} [options.loadPluginEndpoints] If true, load endpoint data
+ *      extended by plugin and generate methods to access that endpoint automatically.
+ *   @param {Boolean(} [options.disableFormData] If false, use FormData
  *      class when available that. The default value is the false.
  */
 var DataAPI = function(options) {
@@ -80,6 +82,7 @@ var DataAPI = function(options) {
         sessionPath: undefined,
         async: true,
         cache: true,
+        loadPluginEndpoints: true,
         disableFormData: false
     };
     for (k in options) {
@@ -107,6 +110,12 @@ var DataAPI = function(options) {
     this.callbacks = {};
     this.tokenData = null;
     this.iframeId  = 0;
+
+    if (this.o.loadPluginEndpoints) {
+        this.loadEndpoints({
+            excludeComponents: 'core'
+        });
+    }
 
     this.trigger('initialize');
 };
