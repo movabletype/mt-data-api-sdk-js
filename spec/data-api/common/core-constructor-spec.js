@@ -48,6 +48,16 @@ describe("DataAPI Constructor", function(){
         expect(api.getEndpointTest).toBeDefined();
     });
 
+    itWithMt("should be defined api.getEndpointTest even when current environment has an expired accessToken", function(){
+        setExpiredAccessToken();
+
+        var api = new MT.DataAPI({
+            baseUrl: dataApiBaseUrl,
+            clientId: "Test"
+        });
+        expect(api.getEndpointTest).toBeDefined();
+    });
+
     it("should be called this.loadEndpoints once when loadPluginEndpoints option is true", function(){
         spyOn(MT.DataAPI.prototype, 'loadEndpoints');
 

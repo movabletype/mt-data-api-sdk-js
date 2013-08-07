@@ -26,14 +26,18 @@ module.exports = function( grunt ) {
             var helper = grunt.config.get("movabletype.options.helper"),
                 stmt   = [];
             stmt.push(
-                "var movableTypeServerRunning = " + (status ? "true" : "false") + ",",
-                "    dataApiBaseUrl = 'http://localhost:" + (port || grunt.config.get("connect.jasmine.options.port")) + "/cgi-bin/mt-data-api.cgi';",
-                "if (typeof global !== 'undefined') {"
+                "(function() {",
+                "var k,",
+                "    global  = new Function(\"return this;\")(),",
+                "    helpers = {",
+                "        movableTypeServerRunning: " + (status ? "true" : "false") + ",",
+                "        dataApiBaseUrl: 'http://localhost:" + (port || grunt.config.get("connect.jasmine.options.port")) + "/cgi-bin/mt-data-api.cgi'",
+                "    };",
+                "    for (k in helpers) {",
+                "        global[k] = helpers[k];",
+                "    }",
+                "})();"
             );
-            ["movableTypeServerRunning", "dataApiBaseUrl"].forEach(function(k) {
-                stmt.push("    global." + k + " = " + k + ";");
-            });
-            stmt.push("}");
             fs.writeFileSync(helper, stmt.join("\n"), "utf8");
         }
 

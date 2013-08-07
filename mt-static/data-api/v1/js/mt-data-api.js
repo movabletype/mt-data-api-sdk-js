@@ -38,12 +38,18 @@
  *   @param {Boolean} [options.async] If true, use asynchronous
  *      XMLHttpRequest. The default value is the true.
  *   @param {Boolean} [options.cache] If false, add an additional
- *      parameter "_" to request to avoid cache. The default value is the true.
- *   @param {Boolean} [options.loadPluginEndpoints] If true, load endpoint data
- *      extended by plugin and generate methods to access that endpoint automatically.
+ *      parameter "_" to request to avoid cache. The default value
+ *      is the true.
+ *   @param {Boolean} [options.withoutAuthorization] If true,
+ *      the "X-MT-Authorization" request header is not sent even if
+ *      already got accessToken. The default value is the false.
+ *   @param {Boolean} [options.loadPluginEndpoints] If true, load
+ *      endpoint data extended by plugin and generate methods to
+ *      access that endpoint automatically. The default value is the true.
  *   @param {Boolean} [options.suppressResponseCodes] If true, add 
- *      suppressResponseCodes parameter to each request
- *   @param {Boolean(} [options.disableFormData] If false, use FormData
+ *      suppressResponseCodes parameter to each request.
+ *      The default value is the true.
+ *   @param {Boolean(} [options.disableFormData] If false,use FormData
  *      class when available that. The default value is the false.
  */
 var DataAPI = function(options) {
@@ -59,6 +65,7 @@ var DataAPI = function(options) {
         sessionPath: undefined,
         async: true,
         cache: true,
+        withoutAuthorization: false,
         loadPluginEndpoints: true,
         suppressResponseCodes: false,
         disableFormData: false
@@ -2528,8 +2535,7 @@ DataAPI.prototype = {
      * @category core
      */
     sendXMLHttpRequest: function(xhr, method, url, params, defaultHeaders) {
-        var k, headers, uk,
-            authHeader = this.getAuthorizationHeader('accessToken');
+        var k, headers, uk;
 
         xhr.open(method, url, this.o.async);
         for (k in defaultHeaders) {
@@ -2539,9 +2545,6 @@ DataAPI.prototype = {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        if (authHeader && ! ('X-MT-Authorization' in defaultHeaders)) {
-            xhr.setRequestHeader('X-MT-Authorization', authHeader);
-        }
 
         function normalizeHeaderKey(all, prefix, letter) {
             return prefix + letter.toUpperCase();
@@ -2699,6 +2702,7 @@ DataAPI.prototype = {
             xhr        = null,
             viaXhr     = true,
             tokenData  = this.getTokenData(),
+            authHeader = this.getAuthorizationHeader('accessToken'),
             currentFormat     = this.getCurrentFormat(),
             originalMethod    = method,
             originalArguments = Array.prototype.slice.call(arguments),
@@ -2795,7 +2799,8 @@ DataAPI.prototype = {
             return base + api._serializeParams(params);
         }
 
-        if (tokenData &&
+        if (! this.o.withoutAuthorization &&
+            tokenData &&
             ! tokenData.accessToken &&
             endpoint !== '/token' &&
             endpoint !== '/authentication'
@@ -2812,6 +2817,14 @@ DataAPI.prototype = {
                 defaultHeaders['X-MT-Authorization'] = '';
             }
             defaultParams.clientId = api.o.clientId;
+        }
+
+        if (! ('X-MT-Authorization' in defaultHeaders)) {
+            defaultHeaders['X-MT-Authorization'] = authHeader;
+        }
+
+        if (this.o.withoutAuthorization) {
+            delete defaultHeaders['X-MT-Authorization'];
         }
 
         if (this.o.suppressResponseCodes) {
@@ -2958,8 +2971,7 @@ DataAPI.prototype = {
                     target     = api._getNextIframeName(),
                     doc        = window.document,
                     form       = doc.createElement('form'),
-                    iframe     = doc.createElement('iframe'),
-                    authHeader = api.getAuthorizationHeader('accessToken');
+                    iframe     = doc.createElement('iframe');
 
 
                 // Set up a form element
@@ -2979,9 +2991,6 @@ DataAPI.prototype = {
 
 
                 params = params || {};
-                if (authHeader) {
-                    params['X-MT-Authorization'] = authHeader;
-                }
                 for (k in defaultHeaders) {
                     params[k] = defaultHeaders[k];
                 }
@@ -3215,7 +3224,7 @@ DataAPI.prototype = {
     loadEndpoints: function(params) {
         var api = this;
 
-        api.withOptions({async: false}, function() {
+        api.withOptions({withoutAuthorization: true, async: false}, function() {
             api.request('GET', '/endpoints', params, function(response) {
                 if (response.error) {
                     return;
