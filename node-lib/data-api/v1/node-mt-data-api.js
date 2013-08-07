@@ -2817,7 +2817,11 @@ DataAPI.prototype = {
             return base + api._serializeParams(params);
         }
 
-        if (tokenData && ! tokenData.accessToken && endpoint !== '/token') {
+        if (tokenData &&
+            ! tokenData.accessToken &&
+            endpoint !== '/token' &&
+            endpoint !== '/authentication'
+        ) {
             return retryWithAuthentication();
         }
 

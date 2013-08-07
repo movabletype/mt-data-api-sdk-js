@@ -10,7 +10,8 @@ function itWithMt() {
 function newDataAPI(options) {
     var opts = {
         baseUrl:  dataApiBaseUrl,
-        clientId: "Test"
+        clientId: "Test",
+        loadPluginEndpoints: false
     };
     if (options) {
         for (k in options) {
