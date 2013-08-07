@@ -233,9 +233,6 @@ var sjcl = {
 
   /** @namespace Hash functions.  Right now only SHA256 is implemented. */
   hash: {},
-
-  /** @namespace Key exchange functions.  Right now only SRP is implemented. */
-  keyexchange: {},
   
   /** @namespace Block cipher modes of operation. */
   mode: {},
@@ -281,10 +278,6 @@ var sjcl = {
     }
   }
 };
-
-if(typeof module != 'undefined' && module.exports){
-  module.exports = sjcl;
-}
 /** @fileOverview Low-level AES implementation.
  *
  * This file contains a low-level implementation of AES, optimized for
@@ -526,7 +519,7 @@ sjcl.cipher.aes.prototype = {
 sjcl.bitArray = {
   /**
    * Array slices in units of bits.
-   * @param {bitArray} a The array to slice.
+   * @param {bitArray a} The array to slice.
    * @param {Number} bstart The offset to the start of the slice, in bits.
    * @param {Number} bend The offset to the end of the slice, in bits.  If this is undefined,
    * slice until the end of the array.
@@ -535,27 +528,6 @@ sjcl.bitArray = {
   bitSlice: function (a, bstart, bend) {
     a = sjcl.bitArray._shiftRight(a.slice(bstart/32), 32 - (bstart & 31)).slice(1);
     return (bend === undefined) ? a : sjcl.bitArray.clamp(a, bend-bstart);
-  },
-
-  /**
-   * Extract a number packed into a bit array.
-   * @param {bitArray} a The array to slice.
-   * @param {Number} bstart The offset to the start of the slice, in bits.
-   * @param {Number} length The length of the number to extract.
-   * @return {Number} The requested slice.
-   */
-  extract: function(a, bstart, blength) {
-    // FIXME: this Math.floor is not necessary at all, but for some reason
-    // seems to suppress a bug in the Chromium JIT.
-    var x, sh = Math.floor((-bstart-blength) & 31);
-    if ((bstart + blength - 1 ^ bstart) & -32) {
-      // it crosses a boundary
-      x = (a[bstart/32|0] << (32 - sh)) ^ (a[bstart/32+1|0] >>> sh);
-    } else {
-      // within a single word
-      x = a[bstart/32|0] >>> sh;
-    }
-    return x & ((1<<blength) - 1);
   },
 
   /**
@@ -734,9 +706,8 @@ sjcl.codec.base64 = {
   _chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
   
   /** Convert from a bitArray to a base64 string. */
-  fromBits: function (arr, _noEquals, _url) {
+  fromBits: function (arr, _noEquals) {
     var out = "", i, bits=0, c = sjcl.codec.base64._chars, ta=0, bl = sjcl.bitArray.bitLength(arr);
-    if (_url) c = c.substr(0,62) + '-_';
     for (i=0; out.length * 6 < bl; ) {
       out += c.charAt((ta ^ arr[i]>>>bits) >>> 26);
       if (bits < 6) {
@@ -753,10 +724,9 @@ sjcl.codec.base64 = {
   },
   
   /** Convert from a base64 string to a bitArray */
-  toBits: function(str, _url) {
+  toBits: function(str) {
     str = str.replace(/\s|=/g,'');
     var out = [], i, bits=0, c = sjcl.codec.base64._chars, ta=0, x;
-    if (_url) c = c.substr(0,62) + '-_';
     for (i=0; i<str.length; i++) {
       x = c.indexOf(str.charAt(i));
       if (x < 0) {
@@ -776,11 +746,6 @@ sjcl.codec.base64 = {
     }
     return out;
   }
-};
-
-sjcl.codec.base64url = {
-  fromBits: function (arr) { return sjcl.codec.base64.fromBits(arr,1,1); },
-  toBits: function (str) { return sjcl.codec.base64.toBits(str,1); }
 };
 /** @fileOverview Javascript SHA-256 implementation.
  *
@@ -1216,10 +1181,9 @@ sjcl.misc.hmac = function (key, Hash) {
 
 /** HMAC with the specified hash function.  Also called encrypt since it's a prf.
  * @param {bitArray|String} data The data to mac.
- * @param {Codec} [encoding] the encoding function to use.
  */
-sjcl.misc.hmac.prototype.encrypt = sjcl.misc.hmac.prototype.mac = function (data, encoding) {
-  var w = new (this._hash)(this._baseHash[0]).update(data, encoding).finalize();
+sjcl.misc.hmac.prototype.encrypt = sjcl.misc.hmac.prototype.mac = function (data) {
+  var w = new (this._hash)(this._baseHash[0]).update(data).finalize();
   return new (this._hash)(this._baseHash[1]).update(w).finalize();
 };
 
@@ -1809,7 +1773,7 @@ sjcl.random = {
         if (!i.match(/^[a-z0-9]+$/i)) {
           throw new sjcl.exception.invalid("json encode: invalid property name");
         }
-        out += comma + '"' + i + '"' + ':';
+        out += comma + '"' + i + '":';
         comma = ',';
         
         switch (typeof obj[i]) {
@@ -1883,7 +1847,6 @@ sjcl.random = {
   
   /** Remove all elements of minus from plus.  Does not modify plus.
    * @private
-   */
   _subtract: function (plus, minus) {
     var out = {}, i;
     
@@ -1895,6 +1858,7 @@ sjcl.random = {
     
     return out;
   },
+  */
   
   /** Return only the specified elements of src.
    * @private
@@ -1934,8 +1898,8 @@ sjcl.decrypt = sjcl.json.decrypt;
 sjcl.misc._pbkdf2Cache = {};
 
 /** Cached PBKDF2 key derivation.
- * @param {String} password The password.
- * @param {Object} [params] The derivation params (iteration count and optional salt).
+ * @param {String} The password.  
+ * @param {Object} The derivation params (iteration count and optional salt).
  * @return {Object} The derived data in key, the salt in salt.
  */
 sjcl.misc.cachedPbkdf2 = function (password, obj) {

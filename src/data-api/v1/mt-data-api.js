@@ -6,7 +6,7 @@
 // @include ../common/core.js
 // @include ../common/cookie.js
 // @include ../common/json.js
-// @include ../common/endpoints.js
+// @include ./endpoints.js
 // @include ../common/exports.js
 
 })(typeof window === "undefined" ? null : window);
