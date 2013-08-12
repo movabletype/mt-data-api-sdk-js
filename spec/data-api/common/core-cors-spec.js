@@ -75,7 +75,7 @@
         });
     });
 
-    it("should not be X-Requested-With for same origin request", function(){
+    it("should be set X-Requested-With for same origin request", function(){
         setupSameOriginEnvironment();
 
         var sent = false,
@@ -88,18 +88,10 @@
         });
         spyOn(xhr, 'setRequestHeader');
 
-        runs(function() {
-            api.listEntries(1, xhr);
-        });
+        api.listEntries(1, xhr);
 
-        waitsFor(function() {
-            return sent;
-        }, "Want response", waitTimeout);
-
-        runs(function() {
-            expect(xhr.setRequestHeader)
-                .toHaveBeenCalledWith('X-Requested-With', 'XMLHttpRequest');
-        });
+        expect(xhr.setRequestHeader)
+            .toHaveBeenCalledWith('X-Requested-With', 'XMLHttpRequest');
     });
 
     it("should not be set X-Requested-With for cross domain request", function(){
@@ -113,16 +105,10 @@
         });
         spyOn(xhr, 'setRequestHeader');
 
-        runs(function() {
-            api.listEntries(1, xhr);
-        });
+        api.listEntries(1, xhr);
 
-        waitsFor(function() {
-            return sent;
-        }, "Want response", waitTimeout);
-
-        runs(function() {
+        if (sent) {
             expect(xhr.setRequestHeader).not.toHaveBeenCalled();
-        });
+        }
     });
 });

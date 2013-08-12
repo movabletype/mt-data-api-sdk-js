@@ -92,10 +92,17 @@ module.exports = function( grunt ) {
         var path   = require("path"),
             fs     = require("fs"),
             dir    = grunt.config.get("jasmine_node.jUnit.savePath"),
-            files  = fs.readdirSync(dir),
             status = true;
 
-        files.forEach(function(f) {
+        function existsSync(p) {
+            return !!fs.existsSync ? fs.existsSync(p) : path.existsSync(p);
+        }
+
+        if (! existsSync(dir)) {
+            return;
+        }
+
+        fs.readdirSync(dir).forEach(function(f) {
             if (! status || ! /xml$/i.test(f)) {
                 return;
             }

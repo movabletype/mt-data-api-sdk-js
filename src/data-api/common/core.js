@@ -1128,7 +1128,12 @@ DataAPI.prototype = {
                      (window.XMLHttpRequest && v instanceof window.XMLHttpRequest) ||
                      (window.XDomainRequest && v instanceof window.XDomainRequest))
                 ) {
-                    xhr = v;
+                    if (window.XDomainRequest && v instanceof window.XDomainRequest) {
+                        xdr = v;
+                    }
+                    else {
+                        xhr = v;
+                    }
                 }
                 else {
                     paramsList.push(v);
@@ -1224,7 +1229,7 @@ DataAPI.prototype = {
                 throw 'Cannot set request header when sending via XDomainRequest';
             }
 
-            xdr = xhr || new window.XDomainRequest();
+            xdr = xdr || new window.XDomainRequest();
             xdr.onload = function() {
                 responseCallback(xdr.contentType, xdr.responseText, 200);
             };
