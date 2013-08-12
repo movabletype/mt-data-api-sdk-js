@@ -1,4 +1,4 @@
-describe("DataAPI CORS", function(){
+(dataApiBaseUrlCrossOrigin !== dataApiBaseUrlSameOrigin ? describe : xdescribe)("DataAPI CORS", function(){
     beforeEach(function() {
         setupCrossOriginEnvironment();
         cleanupSession();

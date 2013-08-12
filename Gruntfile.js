@@ -228,6 +228,7 @@ module.exports = function( grunt ) {
     grunt.registerTask("test-node", [
         "dev",
         "start-movabletype-server:" + grunt.config.get("movabletype.options.port"),
+        "cleanup-jasmine-node-result",
         "jasmine_node",
         "check-jasmine-node-result",
         "stop-movabletype-server",

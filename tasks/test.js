@@ -88,6 +88,22 @@ module.exports = function( grunt ) {
         }
     });
 
+    grunt.registerTask("cleanup-jasmine-node-result", function() {
+        var path   = require("path"),
+            fs     = require("fs"),
+            dir    = grunt.config.get("jasmine_node.jUnit.savePath"),
+            files  = fs.readdirSync(dir),
+            status = true;
+
+        files.forEach(function(f) {
+            if (! status || ! /xml$/i.test(f)) {
+                return;
+            }
+
+            fs.unlink(path.join(dir, f));
+        });
+    });
+
     grunt.registerTask("check-jasmine-node-result", function() {
         var path   = require("path"),
             fs     = require("fs"),
