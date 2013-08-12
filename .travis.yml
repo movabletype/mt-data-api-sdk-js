@@ -5,3 +5,11 @@ before_install:
   - npm install -g grunt-cli
   - npm install -g bower
   - bower install
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.com#movabletype"
+      - "irc.freenode.com#movabletype-ja"
+    on_success: change
+    on_failure: always
+    use_notice: true
