@@ -2590,7 +2590,9 @@ DataAPI.prototype = {
         if (typeof params === 'string') {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        if (! this.o.crossDomain) {
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        }
 
         function normalizeHeaderKey(all, prefix, letter) {
             return prefix + letter.toUpperCase();

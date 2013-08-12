@@ -57,7 +57,7 @@ describe("DataAPI CORS", function(){
     });
 
     itWithMt("should be reported permission error", function(){
-        var result      = null;
+        var result = null;
 
         runs(function() {
             var api = newDataAPI();
@@ -72,6 +72,57 @@ describe("DataAPI CORS", function(){
 
         runs(function() {
             expect(result.error.code).toEqual(403);
+        });
+    });
+
+    it("should not be X-Requested-With for same origin request", function(){
+        setupSameOriginEnvironment();
+
+        var sent = false,
+            api  = newDataAPI(),
+            xhr  = api.newXMLHttpRequest();
+
+        spyOn(xhr, 'open');
+        spyOn(xhr, 'send').andCallFake(function() {
+            sent = true;
+        });
+        spyOn(xhr, 'setRequestHeader');
+
+        runs(function() {
+            api.listEntries(1, xhr);
+        });
+
+        waitsFor(function() {
+            return sent;
+        }, "Want response", waitTimeout);
+
+        runs(function() {
+            expect(xhr.setRequestHeader)
+                .toHaveBeenCalledWith('X-Requested-With', 'XMLHttpRequest');
+        });
+    });
+
+    it("should not be set X-Requested-With for cross domain request", function(){
+        var sent = false,
+            api  = newDataAPI(),
+            xhr  = api.newXMLHttpRequest();
+
+        spyOn(xhr, 'open');
+        spyOn(xhr, 'send').andCallFake(function() {
+            sent = true;
+        });
+        spyOn(xhr, 'setRequestHeader');
+
+        runs(function() {
+            api.listEntries(1, xhr);
+        });
+
+        waitsFor(function() {
+            return sent;
+        }, "Want response", waitTimeout);
+
+        runs(function() {
+            expect(xhr.setRequestHeader).not.toHaveBeenCalled();
         });
     });
 });
