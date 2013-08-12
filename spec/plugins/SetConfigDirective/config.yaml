@@ -1,0 +1,4 @@
+name: SetConfigDirective
+version: 1.00
+
+init_app: $SetConfigDirective::SetConfigDirective::init_app

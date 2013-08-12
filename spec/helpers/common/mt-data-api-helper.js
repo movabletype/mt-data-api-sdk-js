@@ -10,6 +10,12 @@
                     xit.apply(this, arguments);
                 }
             },
+            setupSameOriginEnvironment: function() {
+                global.dataApiBaseUrl = global.dataApiBaseUrlSameOrigin;
+            },
+            setupCrossOriginEnvironment: function() {
+                global.dataApiBaseUrl = global.dataApiBaseUrlCrossOrigin;
+            },
             newDataAPI: function(options) {
                 var api,
                     opts = {

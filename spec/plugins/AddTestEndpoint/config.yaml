@@ -8,7 +8,15 @@ applications:
         version: 1
         route: /endpoint-test
         handler: sub { +{version => 1} }
+        requires_login: 0
       - id: get_endpoint_test
         version: 2
         route: /endpoint-test
         handler: sub { +{version => 2} }
+        requires_login: 0
+      - id: post_endpoint_test
+        verb: POST
+        version: 1
+        route: /endpoint-test
+        handler: sub { my $app = shift; +{ message => $app->param('message') } }
+        requires_login: 0

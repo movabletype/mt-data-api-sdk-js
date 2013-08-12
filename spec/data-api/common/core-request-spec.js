@@ -1,4 +1,7 @@
 describe("DataAPI Request", function(){
+    beforeEach(function() {
+        setupSameOriginEnvironment();
+    });
 
     it("should not be added \"suppressResponseCodes\" parameter by default", function(){
         var requestUrl;
@@ -44,7 +47,7 @@ describe("DataAPI Request", function(){
 
         waitsFor(function() {
             return result;
-        }, "Want response", 100);
+        }, "Want response", waitTimeout);
 
         runs(function() {
             expect(result.error.code).toEqual(404);
