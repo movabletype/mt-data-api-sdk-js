@@ -7,12 +7,12 @@
     it("should be initialized crossOrigin option with false", function(){
         setupSameOriginEnvironment();
         var api = newDataAPI();
-        expect(api.o.crossDomain).toBeFalsy();
+        expect(api.o.crossOrigin).toBeFalsy();
     });
 
     it("should be initialized crossOrigin option with true", function(){
         var api = newDataAPI();
-        expect(api.o.crossDomain).toBeTruthy();
+        expect(api.o.crossOrigin).toBeTruthy();
     });
 
     itWithMt("a GET request should be successful", function(){
