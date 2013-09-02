@@ -213,7 +213,8 @@ DataAPI.sessionStores['cookie'] = {
         Cookie.bake(name, data, o.sessionDomain, o.sessionPath, expires);
     },
     fetch: function(name) {
-        return Cookie.fetch(name).value;
+        var cookie = Cookie.fetch(name);
+        return cookie ? cookie.value : null;
     },
     remove: function(name) {
         var o = this.o;
