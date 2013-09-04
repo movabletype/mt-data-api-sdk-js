@@ -150,7 +150,8 @@ module.exports = function( grunt ) {
                     host: "http://localhost:<%= connect.jasmine.options.port %>/",
                     helpers: [
                         "bower_components/sinon-browser/*.js",
-                        "spec/helpers/common/*.js"
+                        "spec/helpers/common/*.js",
+                        "src/data-api/common/cookie.js",
                     ],
                     keepRunner: true,
                     outfile: "spec/runner.html",
@@ -166,6 +167,7 @@ module.exports = function( grunt ) {
                 ],
                 options: {
                     specs: "spec/data-api/**/*.js",
+                    host: "http://localhost:<%= connect.jasmine.options.port %>/",
                     helpers: [
                         "bower_components/sinon-browser/*.js",
                         "spec/helpers/common/*.js",

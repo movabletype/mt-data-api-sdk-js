@@ -30,6 +30,15 @@ describe("DataAPI Constructor", function(){
         }).toThrow();
     });
 
+    it("should not be created MT.DataAPI with unknown option", function(){
+        expect(function() {
+            var api = new MT.DataAPI({
+                baseUrl: dataApiBaseUrl,
+                unknownOption: null
+            });
+        }).toThrow('Unkown option: unknownOption');
+    });
+
     it("should be called this.loadEndpoints once by default", function(){
         spyOn(MT.DataAPI.prototype, 'loadEndpoints');
 

@@ -39,6 +39,20 @@ describe("DataAPI Formats", function(){
         expect(format).toBeDefined();
     });
 
+    it("should be returned null for unknown mime type", function(){
+        var api    = newDataAPI();
+        var format = api.findFormat('unknown/mime');
+
+        expect(format).toBeNull();
+    });
+
+    it("should be returned null for empty mime type", function(){
+        var api    = newDataAPI();
+        var format = api.findFormat('');
+
+        expect(format).toBeNull();
+    });
+
     it("should be retrieved a json format from MT.DataAPI.defaultFormat", function(){
         var format = MT.DataAPI.getDefaultFormat();
 

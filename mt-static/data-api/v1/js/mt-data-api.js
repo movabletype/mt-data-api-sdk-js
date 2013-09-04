@@ -66,7 +66,7 @@
  *      class when available that. The default value is the false.
  */
 var DataAPI = function(options) {
-    var i, k, l,
+    var i, k,
         requireds = ['clientId', 'baseUrl'];
 
     this.o = {
@@ -87,14 +87,7 @@ var DataAPI = function(options) {
     };
     for (k in options) {
         if (k in this.o) {
-            if (typeof this.o[k] === 'object' && this.o[k] !== null) {
-                for (l in this.o[k]) {
-                   this.o[k][l] = options[k][l];
-                }
-            }
-            else {
-                this.o[k] = options[k];
-            }
+            this.o[k] = options[k];
         }
         else {
             throw 'Unkown option: ' + k;
@@ -2391,7 +2384,7 @@ DataAPI.prototype = {
         for (k in params) {
             v = params[k];
             if (typeof v === 'object') {
-                if (typeof v === 'function') {
+                if (typeof v.id === 'function') {
                     v = v.id();
                 }
                 else {
