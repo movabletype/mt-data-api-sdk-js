@@ -53,7 +53,7 @@ describe("DataAPI Event", function(){
             accessToken = 'some access token',
             tokenData;
 
-        Cookie.bake(defaultKey, '{"accessToken":"' + accessToken + '"}');
+        Cookie.bake(defaultKey, '{"accessToken":"' + accessToken + '"}', undefined, '/');
 
         tokenData = api._updateTokenFromDefaultCookie();
 

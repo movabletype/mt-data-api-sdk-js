@@ -13,7 +13,8 @@ describe("DataAPI Sessionstore", function(){
     });
 
     function getDefaultSessionStore() {
-        var defaultKey   = window.document ? 'cookie-encrypted' : 'fs';
+        var defaultKey = typeof window !== 'undefined' && window.document
+            ? 'cookie-encrypted' : 'fs';
         return MT.DataAPI.sessionStores[defaultKey];
     }
 

@@ -10,20 +10,6 @@
                     xit.apply(this, arguments);
                 }
             },
-            itWithCookie: function() {
-                if (global.document) {
-                    it.apply(this, arguments);
-                }
-                else {
-                    xit.apply(this, arguments);
-                }
-            },
-            setupSameOriginEnvironment: function() {
-                global.dataApiBaseUrl = global.dataApiBaseUrlSameOrigin;
-            },
-            setupCrossOriginEnvironment: function() {
-                global.dataApiBaseUrl = global.dataApiBaseUrlCrossOrigin;
-            },
             newDataAPI: function(options) {
                 var api,
                     opts = {
@@ -63,7 +49,7 @@
                 for (k in MT.DataAPI.callbacks) {
                     delete MT.DataAPI.callbacks[k];
                 }
-            },
+            }
         };
 
     for (k in helpers) {

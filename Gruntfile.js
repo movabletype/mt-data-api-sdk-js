@@ -50,8 +50,18 @@ module.exports = function( grunt ) {
         },
         watch: {
             "data-api": {
-                files: [ "src/**/*.js" ],
+                files: [
+                    "src/**/*.js",
+                    "./spec/data-api/**/*.js",
+                ],
                 tasks: "test"
+            },
+            "data-api-coverage": {
+                files: [
+                    "src/**/*.js",
+                    "./spec/data-api/**/*.js",
+                ],
+                tasks: "test-browser-coverage"
             }
         },
         uglify: {
@@ -150,6 +160,7 @@ module.exports = function( grunt ) {
                     host: "http://localhost:<%= connect.jasmine.options.port %>/",
                     helpers: [
                         "bower_components/sinon-browser/*.js",
+                        "bower_components/jquery/jquery.min.js",
                         "spec/helpers/common/*.js",
                         "src/data-api/common/cookie.js",
                     ],
@@ -170,6 +181,7 @@ module.exports = function( grunt ) {
                     host: "http://localhost:<%= connect.jasmine.options.port %>/",
                     helpers: [
                         "bower_components/sinon-browser/*.js",
+                        "bower_components/jquery/jquery.min.js",
                         "spec/helpers/common/*.js",
                         "src/data-api/common/sjcl.js",
                         "src/data-api/common/cookie.js",

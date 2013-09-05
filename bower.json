@@ -4,6 +4,7 @@
   "devDependencies": {
     "sjcl": "f09fccc04f8bbac78f459819471fdbd90799e9b4",
     "sinon": "~1.7.3",
-    "sinon-browser": "http://sinonjs.org/releases/sinon-1.7.3.js"
+    "sinon-browser": "http://sinonjs.org/releases/sinon-1.7.3.js",
+    "jquery": "~2.0.3"
   }
 }
