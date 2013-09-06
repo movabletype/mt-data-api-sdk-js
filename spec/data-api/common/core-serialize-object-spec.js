@@ -1,6 +1,5 @@
 describe("DataAPI Event", function(){
     var api, i, originalFileConstructor, fakeFileConstructor,
-        $                = jQuery,
         serializedValues = [
             ['Number', 1, 1],
             ['Null', null, ''],
@@ -19,12 +18,12 @@ describe("DataAPI Event", function(){
                 return date;
             })(), '']
         ];
-        $.each([
+        _.each([
             [0, 'Z'],
             [60, '-01:00'],
             [90, '-01:30'],
             [-60, '+01:00']
-        ], function(i, d) {
+        ], function(d) {
             serializedValues.push([
                 'Date: timezone offset = ' + d[0],
                 (function() {
@@ -46,15 +45,15 @@ describe("DataAPI Event", function(){
         }
 
         if (typeof window !== 'undefined' && window.document) {
+            var $ = jQuery;
+
             var $form = $('<form />')
                             .append($('<input />').attr({
                                 name: 'id',
                                 value: 3
                             }));
             serializedValues.push(['Form', $form.get(0), '{"id":"3"}']);
-        }
 
-        if (typeof window !== 'undefined' && window.document) {
             var $input = $('<input />').attr({
                              type: 'file',
                              name: 'file'
@@ -76,7 +75,7 @@ describe("DataAPI Event", function(){
         }
     });
     
-    $.each(serializedValues, function(i, d) {
+    _.each(serializedValues, function(d) {
         it("should be serialized " + d[0] + " by _serializeObject", function(){
             expect(api._serializeObject(d[1])).toEqual(d[2]);
         });

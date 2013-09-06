@@ -160,6 +160,7 @@ module.exports = function( grunt ) {
                     host: "http://localhost:<%= connect.jasmine.options.port %>/",
                     helpers: [
                         "bower_components/sinon-browser/*.js",
+                        "bower_components/underscore/underscore.js",
                         "bower_components/jquery/jquery.min.js",
                         "spec/helpers/common/*.js",
                         "src/data-api/common/cookie.js",
@@ -181,6 +182,7 @@ module.exports = function( grunt ) {
                     host: "http://localhost:<%= connect.jasmine.options.port %>/",
                     helpers: [
                         "bower_components/sinon-browser/*.js",
+                        "bower_components/underscore/underscore.js",
                         "bower_components/jquery/jquery.min.js",
                         "spec/helpers/common/*.js",
                         "src/data-api/common/sjcl.js",

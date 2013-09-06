@@ -7,4 +7,5 @@ global.MT = {
     DataAPI: require(path.join(lib, "bootstrap"))["v1"]
 };
 
-global.sinon = require(path.join(base, "bower_components", "sinon"));
+global.sinon  = require(path.join(base, "bower_components", "sinon"));
+global._      = require(path.join(base, "bower_components", "underscore"));
