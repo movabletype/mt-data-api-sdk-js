@@ -2870,7 +2870,8 @@ DataAPI.prototype = {
         function retryWithAuthentication() {
             api.request('POST', '/token', function(response) {
                 if (response.error) {
-                    return true;
+                    parseArguments(originalArguments);
+                    return runCallback(response);
                 }
                 else {
                     api.storeTokenData(response);
@@ -2888,6 +2889,39 @@ DataAPI.prototype = {
                 base += '&';
             }
             return base + api._serializeParams(params);
+        }
+
+        function parseArguments(args) {
+            for (i = 2; i < args.length; i++) {
+                v = args[i];
+                switch (typeof v) {
+                case 'function':
+                    callback = v;
+                    break;
+                case 'object':
+                    if (
+                        v &&
+                        ! v.nodeName &&
+                        ((window.ActiveXObject && v instanceof window.ActiveXObject) ||
+                         (window.XMLHttpRequest && v instanceof window.XMLHttpRequest) ||
+                         (window.XDomainRequest && v instanceof window.XDomainRequest))
+                    ) {
+                        if (window.XDomainRequest && v instanceof window.XDomainRequest) {
+                            xdr = v;
+                        }
+                        else {
+                            xhr = v;
+                        }
+                    }
+                    else {
+                        paramsList.push(v);
+                    }
+                    break;
+                case 'string':
+                    paramsList.push(api._unserializeParams(v));
+                    break;
+                }
+            }
         }
 
         if (! this.o.withoutAuthorization &&
@@ -2937,36 +2971,7 @@ DataAPI.prototype = {
             method = 'POST';
         }
 
-        for (i = 2; i < arguments.length; i++) {
-            v = arguments[i];
-            switch (typeof v) {
-            case 'function':
-                callback = v;
-                break;
-            case 'object':
-                if (
-                    v &&
-                    ! v.nodeName &&
-                    ((window.ActiveXObject && v instanceof window.ActiveXObject) ||
-                     (window.XMLHttpRequest && v instanceof window.XMLHttpRequest) ||
-                     (window.XDomainRequest && v instanceof window.XDomainRequest))
-                ) {
-                    if (window.XDomainRequest && v instanceof window.XDomainRequest) {
-                        xdr = v;
-                    }
-                    else {
-                        xhr = v;
-                    }
-                }
-                else {
-                    paramsList.push(v);
-                }
-                break;
-            case 'string':
-                paramsList.push(this._unserializeParams(v));
-                break;
-            }
-        }
+        parseArguments(arguments);
 
         if (paramsList.length && (method.toLowerCase() === 'get' || paramsList.length >= 2)) {
             endpoint = appendParamsToURL(endpoint, paramsList.shift());
@@ -3067,7 +3072,7 @@ DataAPI.prototype = {
                 xdr.timeout = this.o.timeout || Number.MAX_VALUE;
             }
             xdr.open( method, base + endpoint);
-            xdr.send( params || null );
+            xdr.send( api._serializeParams(params) || null );
         }
         else if (via === 'xhr') {
             xhr = xhr || this.newXMLHttpRequest();

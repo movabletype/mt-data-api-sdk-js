@@ -1,4 +1,4 @@
-describe("DataAPI Event", function(){
+describe("DataAPI Utility methods", function(){
     var api;
 
     beforeEach(function() {
@@ -40,6 +40,38 @@ describe("DataAPI Event", function(){
 
         expect(tokenData.sessionId).toEqual(sessionId);
         expect(tokenData.accessToken).toEqual(newAccessToken);
+    });
+
+    it("should be expired accessToken after expiresIn seconds passed", function(){
+        var expiresIn = 60,
+            timeValue = 0;
+        spyOn(Date.prototype, 'getTime').andCallFake(function() {
+            return timeValue;
+        });
+        api.storeTokenData({
+            expiresIn: expiresIn,
+            accessToken: 'Test'
+        });
+        timeValue = (expiresIn + 1) * 1000;
+        tokenData = api.getTokenData();
+
+        expect(tokenData.accessToken).toBeFalsy();
+    });
+
+    it("should not be expired accessToken before expiresIn seconds passed", function(){
+        var expiresIn = 60,
+            timeValue = 0;
+        spyOn(Date.prototype, 'getTime').andCallFake(function() {
+            return timeValue;
+        });
+        api.storeTokenData({
+            expiresIn: expiresIn,
+            accessToken: 'Test'
+        });
+        timeValue = (expiresIn - 1) * 1000;
+        tokenData = api.getTokenData();
+
+        expect(tokenData.accessToken).not.toBeFalsy();
     });
 
     itWithCookie("should be returned null when no cookie value was sat up", function(){
@@ -123,5 +155,27 @@ describe("DataAPI Event", function(){
         expect(function() {
             api.loadEndpoints();
         }).not.toThrow();
+    });
+
+    if (typeof window !== 'undefined' && window.document) {
+        it("should not be converted a FORM element by api._serializeFormElementToObject", function(){
+            var $form = $('<form />'),
+                $file = $('<input type="file" name="file" />'),
+                data;
+
+            $form.append($file);
+
+            data = api._serializeFormElementToObject($form.get(0));
+
+            expect(data.file).toEqual($file.get(0));
+        });
+    }
+
+    it("should be returned the true for the false by api._isEmptyObject", function(){
+        expect(api._isEmptyObject(false)).toBeTruthy();
+    });
+
+    it("should be returned the false for the false by api._findFileInput", function(){
+        expect(api._findFileInput(false)).toBeFalsy();
     });
 });

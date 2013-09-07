@@ -18,5 +18,11 @@ applications:
         verb: POST
         version: 1
         route: /endpoint-test
-        handler: sub { my $app = shift; +{ message => $app->param('message') } }
+        handler: sub { my $app = shift; +{ verb => 'POST', message => $app->param('message') } }
+        requires_login: 0
+      - id: put_endpoint_test
+        verb: PUT
+        version: 1
+        route: /endpoint-test
+        handler: sub { my $app = shift; +{ verb => 'PUT', message => $app->param('message') } }
         requires_login: 0

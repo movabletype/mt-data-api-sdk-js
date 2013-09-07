@@ -45,10 +45,18 @@
                     true
                 );
             },
-            cleanupEvent: function() {
-                for (k in MT.DataAPI.callbacks) {
-                    delete MT.DataAPI.callbacks[k];
+            saveDefaultEvent: function() {
+                if (! global.originalGlobalEventCallbacks) {
+                    global.originalGlobalEventCallbacks = MT.DataAPI.callbacks;
                 }
+
+                MT.DataAPI.callbacks = {};
+                _.each(global.originalGlobalEventCallbacks, function(key, events) {
+                    MT.DataAPI.callbacks[key] = _.clone(events);
+                });
+            },
+            cleanupEvent: function() {
+                MT.DataAPI.callbacks = global.originalGlobalEventCallbacks;
             }
         };
 

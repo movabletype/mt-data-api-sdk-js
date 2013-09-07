@@ -4,9 +4,13 @@ describe("DataAPI Event", function(){
         api;
 
     beforeEach(function() {
-        cleanupEvent();
+        saveDefaultEvent();
         cleanupSession();
         api = newDataAPI();
+    });
+
+    afterEach(function() {
+        cleanupEvent();
     });
 
     it("should be triggered global callback", function(){
