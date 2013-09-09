@@ -11,34 +11,48 @@
  * http://jquery.org/license
  */
 
-;(function(window, undefined) {
+;(function(window, factory) {
+    var DataAPI = factory(window);
+
+    if ( typeof module === "object" && typeof module.exports === "object" ) {
+        module.exports = DataAPI;
+    } else {
+        if ( typeof define === "function" && define.amd ) {
+            define("mt-data-api", [], function() {
+                return DataAPI;
+            });
+        }
+    }
+}(typeof window === "undefined" ? undefined : window, function(window, undefined) {
 
 "use strict";
 
-window = {
-    XMLHttpRequest: require('xmlhttprequest').XMLHttpRequest,
-    FormData: require('form-data'),
-    File: require('stream').Stream
-};
-(function() {
-    var fs = require('fs'),
-        _append = window.FormData.prototype.append;
-
-    window.FormData.prototype.append = function(field, value, options) {
-        if (! options && value.hasOwnProperty('fd')) {
-            try {
-                options = {knownLength: fs.statSync(value.path).size};
-            }
-            catch (e) {
-            }
-        }
-
-        var result  = _append.call(this, field, value, options);
-        this.length = this.getLengthSync();
-
-        return result;
+if (typeof window === 'undefined') {
+    window = {
+        XMLHttpRequest: require('xmlhttprequest').XMLHttpRequest,
+        FormData: require('form-data'),
+        File: require('stream').Stream
     };
-})();
+    (function() {
+        var fs = require('fs'),
+            _append = window.FormData.prototype.append;
+
+        window.FormData.prototype.append = function(field, value, options) {
+            if (! options && value.hasOwnProperty('fd')) {
+                try {
+                    options = {knownLength: fs.statSync(value.path).size};
+                }
+                catch (e) {
+                }
+            }
+
+            var result  = _append.call(this, field, value, options);
+            this.length = this.getLengthSync();
+
+            return result;
+        };
+    })();
+}
 
 /**
  * @namespace MT
@@ -4284,9 +4298,7 @@ window.MT         = window.MT || {};
 window.MT.DataAPI = window.MT.DataAPI || DataAPI;
 window.MT.DataAPI['v' + DataAPI.version] = DataAPI;
 
-if ( typeof module === 'object' && module && typeof module.exports === 'object' ) {
-    module.exports = DataAPI;
-}
 
+return DataAPI;
 
-})(typeof window === "undefined" ? null : window);
+}));

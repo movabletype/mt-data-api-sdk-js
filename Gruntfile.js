@@ -191,6 +191,7 @@ module.exports = function( grunt ) {
                         "bower_components/sinon-browser/*.js",
                         "bower_components/underscore/underscore.js",
                         "bower_components/jquery/jquery.min.js",
+                        "bower_components/requirejs/require.js",
                         "spec/helpers/common/*.js",
                         "src/data-api/common/cookie.js",
                     ],

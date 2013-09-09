@@ -45,15 +45,6 @@ module.exports = function( grunt ) {
         "stop-movabletype-server",
     ]);
 
-    grunt.registerTask("test-browser-coverage-text", [
-        "dev",
-        "configureProxies:jasmine",
-        "connect:jasmine",
-        "start-movabletype-server",
-        "jasmine:data-api-coverage-text",
-        "stop-movabletype-server",
-    ]);
-
     grunt.registerTask("test", [
         "test-node",
         "test-headless-browser",
@@ -61,6 +52,9 @@ module.exports = function( grunt ) {
 
     grunt.registerTask("ci", [
         "test-node",
-        "test-browser-coverage-text",
+        "test-headless-browser",
+        "start-movabletype-server",
+        "jasmine:data-api-coverage-text",
+        "stop-movabletype-server",
     ]);
 };

@@ -19,6 +19,7 @@
 	"globals": {
 		"window": true,
 		"module": true,
+		"define": true,
 		"Cookie": true,
 		"DataAPI": true,
 		"escape": true,
