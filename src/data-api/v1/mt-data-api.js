@@ -1,12 +1,26 @@
 // @include ../common/header.js
-;(function(window, undefined) {
+;(function(window, factory) {
+    var DataAPI = factory(window);
+
+    if ( typeof module === "object" && typeof module.exports === "object" ) {
+        module.exports = DataAPI;
+    } else {
+        if ( typeof define === "function" && define.amd ) {
+            define("mt-data-api", [], function() {
+                return DataAPI;
+            });
+        }
+    }
+}(typeof window === "undefined" ? undefined : window, function(window, undefined) {
 
 "use strict";
 
 // @include ../common/core.js
 // @include ../common/cookie.js
 // @include ../common/json.js
-// @include ../common/endpoints.js
+// @include ./endpoints.js
 // @include ../common/exports.js
 
-})(typeof window === "undefined" ? null : window);
+return DataAPI;
+
+}));

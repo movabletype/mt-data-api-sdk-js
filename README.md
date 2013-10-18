@@ -19,8 +19,10 @@ or
 ## Usage
 
 ```
-var DataAPI    = require("mt-data-api-sdk").v1;
-var api        = new DataAPI({
+var MT = {
+    DataAPI: require("mt-data-api-sdk")
+};
+var api = new MT.DataAPI({
   baseUrl:  "http://example.com/mt/mt-data-api.cgi",
   clientId: "node"
 });
@@ -43,13 +45,14 @@ api.authenticate(credential, function(response) {
 # Development
 
 ## Prerequisites
-Installation depends on [node](http://nodejs.org/), [npm](https://npmjs.org/), and [grunt-cli](http://gruntjs.com/)
+Installation depends on [node](http://nodejs.org/), [npm](https://npmjs.org/), [bower](http://bower.io/), and [grunt-cli](http://gruntjs.com/)
 
 To install node, see http://nodejs.org/ (If you are using Mac, you can install node via [homebrew](http://mxcl.github.io/homebrew/))
 
 Then, you can install grunt-cli with npm like the following. When you have some error in installation, try sudo.
 
 ```
+  [sudo] npm install -g bower
   [sudo] npm install -g grunt-cli
 ```
 
@@ -57,21 +60,34 @@ Then, you can install grunt-cli with npm like the following. When you have some 
 `git clone git@github.com:movabletype/mt-data-api-sdk-js`, and move the directory you cloned, then execute the following command
 
 ```
-  npm install
+  make
 ```
 
 ## Building for develop
-grunt dev task generate scripts in lib and dist directory from src directory, and run the dependant tasks
+make dev task generate scripts in lib and dist directory from src directory, and run the dependant tasks
 
 ```
-  grunt dev
+  make dev
 ```
 
 ## Building for production
-grunt build task generate optimized scrips in dist directory
+make build task generate optimized scrips in dist directory
 
 ```
-  grunt build
+  make build
+```
+
+## Testing
+make test task run tests with Node.js and PhantomJS.
+
+```
+  make test
+```
+
+You can also run tests with MT's PSGI Server, if you had been sat up MT and PSGI environment.
+
+```
+  MT_HOME=/path/to/mt make test
 ```
 
 # License

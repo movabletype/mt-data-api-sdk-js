@@ -11,22 +11,45 @@
  *     This value allows alphanumeric, (_)underscore, (-)dash.
  *   @param {String} options.baseUrl The absolute CGI URL of the DataAPI.
  *     (e.g. http://example.com/mt/mt-data-api.cgi)
- *   @param {String} options.format The format to serialize.
- *   @param {String} options.sessionStore The session store.
+ *   @param {String} [options.format] The format to serialize.
+ *   @param {String} [options.sessionStore] The session store.
  *     In browser, the cookie is used by default.
- *   @param {String} options.sessionDomain The session domain.
+ *   @param {String} [options.sessionDomain] The session domain.
  *     When using the cookie, this value is used as cookie domain.
- *   @param {String} options.sessionPath The session path
+ *   @param {String} [options.sessionPath] The session path
  *     When using the cookie, this value is used as cookie path.
- *   @param {String} options.async If true, use asynchronous XMLHttpRequest.
- *      The default value is the true.
- *   @param {String} options.cache If false, add an additional parameter to request
- *      to avoid cache. The default value is the false.
- *   @param {String} options.disableFormData If true, use FormData class when
- *      available that. The default value is the false.
+ *   @param {Boolean} [options.async] If true, use asynchronous
+ *      XMLHttpRequest. The default value is the true.
+ *   @param {Number} [options.timeout] The number of milliseconds a
+ *      request can take before automatically being terminated.
+ *      The default value is not set up, browser's default is used.
+ *   @param {Boolean} [options.cache] If false, add an additional
+ *      parameter "_" to request to avoid cache. The default value
+ *      is the true.
+ *   @param {Boolean} [options.withoutAuthorization] If true,
+ *      the "X-MT-Authorization" request header is not sent even if
+ *      already got accessToken. The default value is the false.
+ *   @param {Boolean} [options.loadPluginEndpoints] If true, load
+ *      endpoint data extended by plugin and generate methods to
+ *      access that endpoint automatically. The default value is
+ *      the true.
+ *      (However even if this option's value is false, you are able
+ *      to use all the methods to access to core endpoint.)
+ *   @param {Boolean} [options.suppressResponseCodes] If true, add
+ *      suppressResponseCodes parameter to each request. As a result,
+ *      the Data API always returns 200 as HTTP response code.
+ *      The default value is not set up.
+ *      The default value is the false when requested via XMLHttpRequest
+ *      or IFRAME. The default value is the true when requested via
+ *      XDomainRequest.
+ *   @param {Boolean} [options.crossOrigin] If true, requests are sent as
+ *      a cross-domain request. The default value is assigned
+ *      automatically by document's URL and baseUrl.
+ *   @param {Boolean(} [options.disableFormData] If false,use FormData
+ *      class when available that. The default value is the false.
  */
 var DataAPI = function(options) {
-    var i, k, l,
+    var i, k,
         requireds = ['clientId', 'baseUrl'];
 
     this.o = {
@@ -37,19 +60,17 @@ var DataAPI = function(options) {
         sessionDomain: undefined,
         sessionPath: undefined,
         async: true,
-        cache: false,
+        timeout: undefined,
+        cache: true,
+        withoutAuthorization: false,
+        loadPluginEndpoints: true,
+        suppressResponseCodes: undefined,
+        crossOrigin: undefined,
         disableFormData: false
     };
     for (k in options) {
         if (k in this.o) {
-            if (typeof this.o[k] === 'object' && this.o[k] !== null) {
-                for (l in this.o[k]) {
-                   this.o[k][l] = options[k][l];
-                }
-            }
-            else {
-                this.o[k] = options[k];
-            }
+            this.o[k] = options[k];
         }
         else {
             throw 'Unkown option: ' + k;
@@ -65,6 +86,14 @@ var DataAPI = function(options) {
     this.callbacks = {};
     this.tokenData = null;
     this.iframeId  = 0;
+
+    this._initOptions();
+
+    if (this.o.loadPluginEndpoints) {
+        this.loadEndpoints({
+            excludeComponents: 'core'
+        });
+    }
 
     this.trigger('initialize');
 };
@@ -114,7 +143,7 @@ DataAPI.defaultFormat = 'json';
  * @private
  * @type String
  */
-DataAPI.defaultSessionStore = window.document ? 'cookie' : 'fs';
+DataAPI.defaultSessionStore = window.document ? 'cookie-encrypted' : 'fs';
 
 /**
  * Class level callbacks function data.
@@ -152,21 +181,9 @@ DataAPI.formats = {
  * @private
  * @type Object
  */
-DataAPI.sessionStores = {
-    cookie: {
-        save: function(name, data) {
-            var o = this.o;
-            Cookie.bake(name, data, o.sessionDomain, o.sessionPath);
-        },
-        fetch: function(name) {
-            return Cookie.fetch(name).value;
-        },
-        remove: function(name) {
-            var o = this.o;
-            Cookie.bake(name, '', o.sessionDomain, o.sessionPath, new Date(0));
-        },
-    }
-};
+DataAPI.sessionStores = {};
+// @include ../common/sessionstore-cookie.js
+// @include ../common/sessionstore-cookie-encrypted.js
 
 /**
  * Register callback to class.
@@ -222,11 +239,11 @@ DataAPI.off = function(key, callback) {
  * @method registerFormat
  * @static
  * @param {String} key Format name
- * @param {Object} spec Format spec
+ * @param {Object} spec
  *   @param {String} spec.fileExtension Extension
  *   @param {String} spec.mimeType MIME type
- *   @param {String} spec.serialize
- *   @param {String} spec.unserialize
+ *   @param {String} spec.serialize Serializing method
+ *   @param {String} spec.unserialize Unserializing method
  * @category core
  */
 DataAPI.registerFormat = function(key, spec) {
@@ -237,11 +254,11 @@ DataAPI.registerFormat = function(key, spec) {
  * Register session store.
  * @method registerSessionStore
  * @static
- * @param {String} key Format name
- * @param {Object} spec Format spec
- *   @param {String} spec.save
- *   @param {String} spec.restore
- *   @param {String} spec.dispose
+ * @param {String} key Session store name
+ * @param {Object} spec
+ *   @param {String} spec.save Saving method
+ *   @param {String} spec.restore Restoring method
+ *   @param {String} spec.dispose Disposing method
  * @category core
  */
 DataAPI.registerSessionStore = function(key, spec) {
@@ -272,6 +289,39 @@ DataAPI.getDefaultSessionStore = function() {
 
 DataAPI.prototype = {
     constructor: DataAPI.prototype.constructor,
+
+    _initOptions: function() {
+        this._initCrossDomainOption();
+    },
+
+    _initCrossDomainOption: function() {
+        var loc, locParts, baseUrl, baseParts,
+            urlRegexp = /^([\w.+-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/;
+
+        if ( window.document && typeof this.o.crossOrigin === 'undefined') {
+            // IE may throw an exception when accessing
+            // a field from window.location if document.domain has been set
+            try {
+                loc = window.location.href;
+            } catch( e ) {
+                // Use the href attribute of an A element
+                // since IE will modify it given document.location
+                loc = window.document.createElement( "a" );
+                loc.href = "";
+                loc = loc.href;
+            }
+            locParts  = urlRegexp.exec( loc.toLowerCase() ) || [];
+
+            baseUrl   = this.o.baseUrl.replace(/^\/\//, locParts[1]).toLowerCase();
+            baseParts = urlRegexp.exec( baseUrl );
+
+            this.o.crossOrigin = !!( baseParts &&
+                ( baseParts[ 1 ] !== locParts[ 1 ] || baseParts[ 2 ] !== locParts[ 2 ] ||
+                    ( baseParts[ 3 ] || ( baseParts[ 1 ] === "http:" ? "80" : "443" ) ) !==
+                        ( locParts[ 3 ] || ( locParts[ 1 ] === "http:" ? "80" : "443" ) ) )
+            );
+        }
+    },
 
     /**
      * Get authorization URL.
@@ -317,14 +367,7 @@ DataAPI.prototype = {
         return this.constructor.accessTokenKey + '_' + this.o.clientId;
     },
 
-    /**
-     * Get format by MIME Type.
-     * @method findFormat
-     * @param {String} mimeType MIME Type
-     * @return {Object|null} Format. Return null if any format is not found.
-     * @category core
-     */
-    findFormat: function(mimeType) {
+    _findFormatInternal: function(mimeType) {
         if (! mimeType) {
             return null;
         }
@@ -336,6 +379,22 @@ DataAPI.prototype = {
         }
 
         return null;
+    },
+
+    /**
+     * Get format by MIME Type.
+     * @method findFormat
+     * @param {String} mimeType MIME Type
+     * @return {Object|null} Format. Return null if any format is not found.
+     * @category core
+     */
+    findFormat: function(mimeType) {
+        var format = this._findFormatInternal(mimeType);
+        if (! format && mimeType.indexOf(';')) {
+            format = this._findFormatInternal(mimeType.replace(/\s*;.*/, ''));
+        }
+
+        return format;
     },
 
     /**
@@ -421,7 +480,7 @@ DataAPI.prototype = {
      *   @param {String} tokenData.accessToken access token
      *   @param {String} tokenData.expiresIn The number of seconds
      *     until access token becomes invalid
-     *   @param {String} tokenData.sessionId [optional] session ID
+     *   @param {String} [tokenData.sessionId] session ID
      * @category core
      */
     storeTokenData: function(tokenData) {
@@ -431,7 +490,11 @@ DataAPI.prototype = {
         }
 
         tokenData.startTime = this._getCurrentEpoch();
-        this.saveSessionData(this.getAppKey(), this.serializeData(tokenData));
+        this.saveSessionData(
+            this.getAppKey(),
+            this.serializeData(tokenData),
+            tokenData.sessionId && tokenData.remember
+        );
         this.tokenData = tokenData;
     },
 
@@ -490,13 +553,7 @@ DataAPI.prototype = {
             delete token.expiresIn;
         }
 
-        this.tokenData = token;
-
-        if (! this.tokenData) {
-            return null;
-        }
-
-        return this.tokenData;
+        return this.tokenData = token || null;
     },
 
     /**
@@ -535,7 +592,7 @@ DataAPI.prototype = {
         for (k in params) {
             v = params[k];
             if (typeof v === 'object') {
-                if (typeof v === 'function') {
+                if (typeof v.id === 'function') {
                     v = v.id();
                 }
                 else {
@@ -739,8 +796,7 @@ DataAPI.prototype = {
      * @category core
      */
     sendXMLHttpRequest: function(xhr, method, url, params, defaultHeaders) {
-        var k, headers, uk,
-            authHeader = this.getAuthorizationHeader('accessToken');
+        var k, headers, uk;
 
         xhr.open(method, url, this.o.async);
         for (k in defaultHeaders) {
@@ -749,9 +805,8 @@ DataAPI.prototype = {
         if (typeof params === 'string') {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         }
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        if (authHeader && ! ('X-MT-Authorization' in defaultHeaders)) {
-            xhr.setRequestHeader('X-MT-Authorization', authHeader);
+        if (! this.o.crossOrigin) {
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         }
 
         function normalizeHeaderKey(all, prefix, letter) {
@@ -880,14 +935,24 @@ DataAPI.prototype = {
         }
 
         this.o = o;
+        this._initOptions();
+
         result = func.apply(this);
+
         this.o = originalOption;
+        this._initOptions();
 
         return result;
     },
 
+    _requestVia: function() {
+        return (window.XDomainRequest &&
+                this.o.crossOrigin &&
+                /msie (8|9)\./i.test(window.navigator.appVersion)) ? 'xdr' : 'xhr';
+    },
+
     /**
-     * Execute function with specified options.
+     * Send a request to the endpoint with specified parameters.
      * @method request
      * @param {String} method Request method
      * @param {String} endpoint Endpoint to request
@@ -908,8 +973,10 @@ DataAPI.prototype = {
             params     = null,
             callback   = function(){},
             xhr        = null,
-            viaXhr     = true,
+            xdr        = null,
+            via        = this._requestVia(),
             tokenData  = this.getTokenData(),
+            authHeader = this.getAuthorizationHeader('accessToken'),
             currentFormat     = this.getCurrentFormat(),
             originalMethod    = method,
             originalArguments = Array.prototype.slice.call(arguments),
@@ -946,7 +1013,7 @@ DataAPI.prototype = {
             }
 
             if (api._findFileInput(params)) {
-                viaXhr = false;
+                via = 'iframe';
 
                 data = {};
                 for (k in params) {
@@ -979,24 +1046,21 @@ DataAPI.prototype = {
         function needToRetry(response) {
             return response.error &&
                 response.error.code === 401 &&
-                endpoint !== '/token';
+                endpoint !== '/token' &&
+                endpoint !== '/authentication';
         }
 
         function retryWithAuthentication() {
             api.request('POST', '/token', function(response) {
-                var status;
-
                 if (response.error) {
-                    status = runCallback(response);
-                    if (status !== false && response.error.code === 401) {
-                        api.trigger('authorizationRequired', response);
-                    }
+                    parseArguments(originalArguments);
+                    return runCallback(response);
                 }
                 else {
                     api.storeTokenData(response);
                     api.request.apply(api, originalArguments);
+                    return false;
                 }
-                return false;
             });
         }
 
@@ -1010,8 +1074,50 @@ DataAPI.prototype = {
             return base + api._serializeParams(params);
         }
 
-        if (tokenData && ! tokenData.accessToken && endpoint !== '/token') {
+        function parseArguments(args) {
+            for (i = 2; i < args.length; i++) {
+                v = args[i];
+                switch (typeof v) {
+                case 'function':
+                    callback = v;
+                    break;
+                case 'object':
+                    if (
+                        v &&
+                        ! v.nodeName &&
+                        ((window.ActiveXObject && v instanceof window.ActiveXObject) ||
+                         (window.XMLHttpRequest && v instanceof window.XMLHttpRequest) ||
+                         (window.XDomainRequest && v instanceof window.XDomainRequest))
+                    ) {
+                        if (window.XDomainRequest && v instanceof window.XDomainRequest) {
+                            xdr = v;
+                        }
+                        else {
+                            xhr = v;
+                        }
+                    }
+                    else {
+                        paramsList.push(v);
+                    }
+                    break;
+                case 'string':
+                    paramsList.push(api._unserializeParams(v));
+                    break;
+                }
+            }
+        }
+
+        if (! this.o.withoutAuthorization &&
+            tokenData &&
+            ! tokenData.accessToken &&
+            endpoint !== '/token' &&
+            endpoint !== '/authentication'
+        ) {
             return retryWithAuthentication();
+        }
+
+        if (authHeader) {
+            defaultHeaders['X-MT-Authorization'] = authHeader;
         }
 
         if (endpoint === '/token' || endpoint === '/authentication') {
@@ -1020,9 +1126,19 @@ DataAPI.prototype = {
                     api.getAuthorizationHeader('sessionId');
             }
             else if (endpoint === '/token' && originalMethod.toLowerCase() === 'post') {
-                defaultHeaders['X-MT-Authorization'] = '';
+                delete defaultHeaders['X-MT-Authorization'];
             }
             defaultParams.clientId = api.o.clientId;
+        }
+
+        if (this.o.withoutAuthorization) {
+            delete defaultHeaders['X-MT-Authorization'];
+        }
+
+        if (this.o.suppressResponseCodes ||
+            (typeof this.o.suppressResponseCodes === 'undefined' && via === 'xdr')
+        ) {
+            defaultParams.suppressResponseCodes = true;
         }
 
         if (! this.o.cache) {
@@ -1038,30 +1154,7 @@ DataAPI.prototype = {
             method = 'POST';
         }
 
-        for (i = 2; i < arguments.length; i++) {
-            v = arguments[i];
-            switch (typeof v) {
-            case 'function':
-                callback = v;
-                break;
-            case 'object':
-                if (
-                    v &&
-                    ! v.nodeName &&
-                    ((window.ActiveXObject && v instanceof window.ActiveXObject) ||
-                     (window.XMLHttpRequest && v instanceof window.XMLHttpRequest))
-                ) {
-                    xhr = v;
-                }
-                else {
-                    paramsList.push(v);
-                }
-                break;
-            case 'string':
-                paramsList.push(this._unserializeParams(v));
-                break;
-            }
-        }
+        parseArguments(arguments);
 
         if (paramsList.length && (method.toLowerCase() === 'get' || paramsList.length >= 2)) {
             endpoint = appendParamsToURL(endpoint, paramsList.shift());
@@ -1094,53 +1187,103 @@ DataAPI.prototype = {
         base = this.o.baseUrl.replace(/\/*$/, '/') + 'v' + this.getVersion();
         endpoint = endpoint.replace(/^\/*/, '/');
 
-        if (viaXhr) {
+
+        function responseCallback(contentType, responseText, status, statusText, cleanup) {
+            var response, mimeType, format, callbackResult;
+
+            try {
+                mimeType = contentType;
+                format   = api.findFormat(mimeType) || api.getCurrentFormat();
+                response = format.unserialize(responseText);
+            }
+            catch (e) {
+                response = {
+                    error: {
+                        code:    +status,
+                        message: statusText || 'Communication Error'
+                    }
+                };
+            }
+
+            if (needToRetry(response)) {
+                retryWithAuthentication();
+                if (cleanup) {
+                    cleanup();
+                }
+                return false;
+            }
+
+            if (endpoint === '/authentication' &&
+                originalMethod.toLowerCase() === 'delete' &&
+                ! response.error) {
+                api.removeSessionData(api.getAppKey());
+            }
+            else if (! response.error && (
+                (endpoint === '/authentication' &&
+                 originalMethod.toLowerCase() === 'post') ||
+                (endpoint === '/token' &&
+                 originalMethod.toLowerCase() === 'post'))) {
+                api.storeTokenData(response);
+            }
+
+            callbackResult = runCallback(response);
+
+            if (callbackResult !== false &&
+                response.error && response.error.code === 401 &&
+                endpoint !== '/authentication') {
+                api.trigger('authorizationRequired', response);
+            }
+        }
+
+        if (via === 'xdr') {
+            if (! this._isEmptyObject(defaultHeaders)) {
+                throw 'Cannot set request header when sending via XDomainRequest';
+            }
+
+            xdr = xdr || new window.XDomainRequest();
+            xdr.onload = function() {
+                responseCallback(xdr.contentType, xdr.responseText, 200);
+            };
+            xdr.onerror = function() {
+                responseCallback(xdr.contentType, xdr.responseText, 404);
+            };
+            xdr.onprogress = function(){};
+            xdr.ontimeout = function() {
+                responseCallback(xdr.contentType, xdr.responseText, 0);
+            };
+            if (typeof this.o.timeout !== 'undefined') {
+                xdr.timeout = this.o.timeout || Number.MAX_VALUE;
+            }
+            xdr.open( method, base + endpoint);
+            xdr.send( api._serializeParams(params) || null );
+        }
+        else if (via === 'xhr') {
             xhr = xhr || this.newXMLHttpRequest();
+            if (typeof this.o.timeout !== 'undefined') {
+                xhr.timeout = this.o.timeout;
+            }
             xhr.onreadystatechange = function() {
+                var responseResult, url;
+
                 if (xhr.readyState !== 4) {
                     return;
-                }
-
-                var response, mimeType, format, url;
-
-                try {
-                    mimeType = xhr.getResponseHeader('Content-Type');
-                    format   = api.findFormat(mimeType) || api.getCurrentFormat();
-                    response = format.unserialize(xhr.responseText);
-                }
-                catch (e) {
-                    response = {
-                        error: {
-                            code:    parseInt(xhr.status, 10),
-                            message: xhr.statusText
-                        }
-                    };
                 }
 
                 function cleanup() {
                     xhr.onreadystatechange = function(){};
                 }
 
-                if (needToRetry(response)) {
-                    retryWithAuthentication();
-                    cleanup();
+                responseResult = responseCallback(
+                    xhr.getResponseHeader('Content-Type'),
+                    xhr.responseText,
+                    xhr.status,
+                    xhr.statusText,
+                    cleanup
+                );
+
+                if (responseResult === false) {
                     return;
                 }
-
-                if (endpoint === '/authentication' &&
-                    originalMethod.toLowerCase() === 'delete' &&
-                    ! response.error) {
-                    api.removeSessionData(api.getAppKey());
-                }
-                else if (! response.error && (
-                    (endpoint === '/authentication' &&
-                     originalMethod.toLowerCase() === 'post') ||
-                    (endpoint === '/token' &&
-                     originalMethod.toLowerCase() === 'post'))) {
-                    api.storeTokenData(response);
-                }
-
-                runCallback(response);
 
                 url = xhr.getResponseHeader('X-MT-Next-Phase-URL');
                 if (url) {
@@ -1159,8 +1302,7 @@ DataAPI.prototype = {
                     target     = api._getNextIframeName(),
                     doc        = window.document,
                     form       = doc.createElement('form'),
-                    iframe     = doc.createElement('iframe'),
-                    authHeader = api.getAuthorizationHeader('accessToken');
+                    iframe     = doc.createElement('iframe');
 
 
                 // Set up a form element
@@ -1180,9 +1322,6 @@ DataAPI.prototype = {
 
 
                 params = params || {};
-                if (authHeader) {
-                    params['X-MT-Authorization'] = authHeader;
-                }
                 for (k in defaultHeaders) {
                     params[k] = defaultHeaders[k];
                 }
@@ -1416,7 +1555,7 @@ DataAPI.prototype = {
     loadEndpoints: function(params) {
         var api = this;
 
-        api.withOptions({async: false}, function() {
+        api.withOptions({withoutAuthorization: true, async: false}, function() {
             api.request('GET', '/endpoints', params, function(response) {
                 if (response.error) {
                     return;

@@ -1,0 +1,28 @@
+name: AddTestEndpoint
+version: 1.00
+
+applications:
+  data_api:
+    endpoints:
+      - id: get_endpoint_test
+        version: 1
+        route: /endpoint-test
+        handler: sub { +{version => 1} }
+        requires_login: 0
+      - id: get_endpoint_test
+        version: 2
+        route: /endpoint-test
+        handler: sub { +{version => 2} }
+        requires_login: 0
+      - id: post_endpoint_test
+        verb: POST
+        version: 1
+        route: /endpoint-test
+        handler: sub { my $app = shift; +{ verb => 'POST', message => $app->param('message') } }
+        requires_login: 0
+      - id: put_endpoint_test
+        verb: PUT
+        version: 1
+        route: /endpoint-test
+        handler: sub { my $app = shift; +{ verb => 'PUT', message => $app->param('message') } }
+        requires_login: 0

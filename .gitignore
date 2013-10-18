@@ -7,3 +7,17 @@ dist
 /*.html
 .DS_Store
 node_modules
+bower_components
+*.grunt
+
+# Test results
+reports
+
+# Generated helpers
+spec/helpers/common/psgi-server-status-helper.js
+
+# Generated test runner
+spec/runner.html
+
+# Generated source for coverage
+.src/data-api/coverage

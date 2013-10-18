@@ -19,10 +19,12 @@
 	"globals": {
 		"window": true,
 		"module": true,
+		"define": true,
 		"Cookie": true,
 		"DataAPI": true,
 		"escape": true,
 		"unescape": true,
-		"console": true
+		"console": true,
+		"sjcl": true
 	}
 }

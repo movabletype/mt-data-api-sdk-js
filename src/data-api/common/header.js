@@ -4,7 +4,7 @@
  * Copyright (c) 2013 Six Apart, Ltd.
  * This program is distributed under the terms of the MIT license.
  *
- * Includes jQuery JavaScript Library to serialize a HTMLFormElement
+ * Includes jQuery JavaScript Library in some parts.
  * http://jquery.com/
  * Copyright 2005, 2013 jQuery Foundation, Inc. and other contributors
  * Released under the MIT license
