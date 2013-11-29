@@ -16,6 +16,8 @@
 "use strict";
 
 // @include ../common/core.js
+// @include ../common/util.js
+// @include ../common/search-condition.js
 // @include ../common/cookie.js
 // @include ../common/json.js
 // @include ./endpoints.js

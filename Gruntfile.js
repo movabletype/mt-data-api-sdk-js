@@ -10,7 +10,8 @@ module.exports = function( grunt ) {
             "src/data-api/common/endpoints.js",
             "src/data-api/common/exports.js",
             "src/data-api/common/sessionstore-cookie.js",
-            "src/data-api/common/sessionstore-cookie-encrypted.js"
+            "src/data-api/common/sessionstore-cookie-encrypted.js",
+            "src/data-api/common/search-condition.js"
         ],
         srcNode               = srcBrowser.concat([
             "src/data-api/common/window.js",
@@ -24,6 +25,8 @@ module.exports = function( grunt ) {
         return {
             src: [
                 "src/data-api/common/core.js",
+                "src/data-api/common/util.js",
+                "src/data-api/common/search-condition.js",
                 "src/data-api/common/sessionstore-cookie.js",
                 "src/data-api/common/sessionstore-cookie-encrypted.js",
                 "<%= preprocess['data-api-coverage-endpoints'].dest %>",
