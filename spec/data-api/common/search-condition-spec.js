@@ -1,4 +1,4 @@
-describe("DataAPI SearchCondition", function() {
+describe("DataAPI.SearchCondition", function() {
 
     it("should be created MT.DataAPI.SearchCondition without option", function(){
         expect(function() {
