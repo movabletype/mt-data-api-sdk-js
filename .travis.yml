@@ -2,8 +2,7 @@ language: node_js
 node_js:
   - 0.8
 env:
-  - MT_HOME=/home/travis/mt
-  - MT_TEST_WAIT_TIMEOUT=10000
+  - MT_HOME=/home/travis/mt MT_TEST_WAIT_TIMEOUT=10000
 before_install:
   - npm install -g grunt-cli
   - npm install -g bower
