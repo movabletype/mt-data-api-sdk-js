@@ -2756,7 +2756,7 @@ DataAPI.prototype = {
 
                 data = {};
                 for (k in params) {
-                    if (api._isFileInputElement(params[k])) {
+                    if (DataAPI.Util.isFileInputElement(params[k])) {
                         data[k] = params[k];
                     }
                     else {
@@ -3072,7 +3072,7 @@ DataAPI.prototype = {
                 params['X-MT-Requested-Via'] = 'IFRAME';
 
                 for (k in params) {
-                    if (api._isFileInputElement(params[k])) {
+                    if (DataAPI.Util.isFileInputElement(params[k])) {
                         file         = params[k];
                         originalName = file.name;
                         file.name    = k;
