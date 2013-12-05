@@ -16,7 +16,8 @@ module.exports = function( grunt ) {
                 grunt.config.get("movabletype.options.port"),
                 "--plugin-path",
                 path.join(base, "spec", "plugins"),
-            ];
+            ],
+            waitTimeout = process.env.MT_TEST_WAIT_TIMEOUT || 1000;
 
         function existsSync(p) {
             return !!fs.existsSync ? fs.existsSync(p) : path.existsSync(p);
@@ -40,7 +41,7 @@ module.exports = function( grunt ) {
                 "        }",
                 "    },",
                 "    helpers  = {",
-                "        waitTimeout: 1000,",
+                "        waitTimeout: " + waitTimeout + ",",
                 "        movableTypeServerRunning: " + (status ? "true" : "false") + ",",
                 "        dataApiBaseUrl: 'http://' + hostWithPort(hostname, " + (port || grunt.config.get("connect.jasmine.options.port")) + ") + '/cgi-bin/mt-data-api.cgi',",
                 "        dataApiBaseUrlSameOrigin: 'http://' + hostWithPort(hostname, " + (port || grunt.config.get("connect.jasmine.options.port")) + ") + '/cgi-bin/mt-data-api.cgi',",
