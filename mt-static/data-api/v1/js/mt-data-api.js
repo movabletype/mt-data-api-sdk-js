@@ -2428,8 +2428,8 @@ DataAPI.prototype = {
         }
 
         if (token &&
-            token.startTime &&
-            token.expiresIn &&
+            'startTime' in token &&
+            'expiresIn' in token &&
             (token.startTime + token.expiresIn < this._getCurrentEpoch())) {
             delete token.accessToken;
             delete token.startTime;
