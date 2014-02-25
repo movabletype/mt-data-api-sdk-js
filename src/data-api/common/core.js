@@ -1587,7 +1587,7 @@ DataAPI.prototype = {
  *   @param {Object} response.data The data exists only if a current error has optional data
  * @example
  *     api.on("error", function(response) {
- *       console.log(response.message);
+ *       console.log(response.error.message);
  *     });
  **/
 
