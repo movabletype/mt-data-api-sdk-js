@@ -498,6 +498,16 @@ DataAPI.prototype = {
         this.tokenData = tokenData;
     },
 
+    /**
+     * Clear token data from object and session store.
+     * @method clearTokenData
+     * @category core
+     */
+    clearTokenData: function() {
+        this.removeSessionData(this.getAppKey());
+        this.tokenData = null;
+    },
+
     _updateTokenFromDefaultCookie: function() {
         var defaultKey    = this.constructor.accessTokenKey,
             defaultCookie = Cookie.fetch(defaultKey),
@@ -1213,10 +1223,15 @@ DataAPI.prototype = {
                 return false;
             }
 
-            if (endpoint === '/authentication' &&
-                originalMethod.toLowerCase() === 'delete' &&
-                ! response.error) {
-                api.removeSessionData(api.getAppKey());
+            if ((! response.error &&
+                    endpoint === '/authentication' &&
+                    originalMethod.toLowerCase() === 'delete') ||
+                (response.error && response.error.code === 401 && (
+                    (endpoint === '/authentication' &&
+                     originalMethod.toLowerCase() === 'post') ||
+                    (endpoint === '/token' &&
+                     originalMethod.toLowerCase() === 'post')))) {
+                api.clearTokenData();
             }
             else if (! response.error && (
                 (endpoint === '/authentication' &&
