@@ -15,33 +15,40 @@ function cookieName(name) {
     return name + '_' + port;
 }
 
-function localStorageName(name, o) {
-    return localStorageNames(name, o)[0];
+function fetchCookieValues(name) {
+    var cookie = Cookie.fetch(cookieName(name));
+
+    if (! cookie) {
+        return {};
+    }
+
+    try {
+        return JSON.parse(cookie.value);
+    }
+    catch (e) {
+        return {
+            encryptKey: cookie.value
+        };
+    }
 }
 
-function buildLocalStorageNames(name, path) {
-    function buildName(path) {
-        return name + ':' + path;
+function fillinDefaultCookieValues(values, o) {
+    function generateKey() {
+        return sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0));
     }
 
-    var names = [];
-
-    if (! path) {
-        return [name];
+    var path = values.path,
+        currentPath = extractPath(documentUrl());
+    if (! path || path.length > currentPath.length) {
+        path = currentPath;
     }
 
-    while (true) {
-        names.push(buildName(path));
-        if (path === '/') {
-            break;
-        }
-        path = path.replace(/[^\/]+\/$/, '');
-    }
-    return names;
-}
-
-function localStorageNames(name, o) {
-    return buildLocalStorageNames(name, o.sessionPath || extractPath(documentUrl()));
+    return {
+        encryptKey: values.encryptKey || generateKey(),
+        storageKey: values.storageKey || generateKey(),
+        domain: o.sessionDomain || values.domain || undefined,
+        path: o.sessionPath || path
+    };
 }
 
 function documentUrl() {
@@ -67,10 +74,39 @@ function documentUrl() {
 }
 
 function extractPath(url) {
-    var urlRegexp = /^[\w.+-]+:(?:\/\/[^\/?#:]*(?::\d+|)|)(.*\/)[^\/]*$/,
+    var urlRegexp = /^[\w.+-]+:(?:\/\/[^\/?#:]*(?::\d+|)|)(.*)\/[^\/]*$/,
         match     = urlRegexp.exec(url.toLowerCase());
 
     return match ? match[1] : null;
+}
+
+// DEPRECATED
+// This method will be removed in future version.
+function buildLocalStorageNames(name, path) {
+    function buildName(path) {
+        return name + ':' + path;
+    }
+
+    var names = [];
+
+    if (! path) {
+        return [name];
+    }
+
+    while (true) {
+        names.push(buildName(path));
+        if (path === '/') {
+            break;
+        }
+        path = path.replace(/[^\/]+\/$/, '');
+    }
+    return names;
+}
+
+// DEPRECATED
+// This method will be removed in future version.
+function localStorageNames(name, o) {
+    return buildLocalStorageNames(name, o.sessionPath || extractPath(documentUrl())+"/");
 }
 
 if (! localStorage) {
@@ -83,25 +119,31 @@ if (! localStorage) {
 else {
     DataAPI.sessionStores['cookie-encrypted'] = {
         save: function(name, data, remember) {
-            var key     = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0)),
-                o       = this.o,
-                expires = remember ? new Date(new Date().getTime() + 315360000000) : undefined; // after 10 years
+            var expires = remember ? new Date(new Date().getTime() + 315360000000) : undefined, // after 10 years
+                values  = fillinDefaultCookieValues(fetchCookieValues(name), this.o);
 
-            Cookie.bake(cookieName(name), key, o.sessionDomain, o.sessionPath, expires);
-            localStorage.setItem(localStorageName(name, o), sjcl.encrypt(key, data));
+            Cookie.bake(cookieName(name), JSON.stringify(values), values.domain, values.path, expires);
+            localStorage.setItem(values.storageKey, sjcl.encrypt(values.encryptKey, data));
         },
         fetch: function(name) {
-            var names = localStorageNames(name, this.o),
-                key, i, value;
+            var values = fetchCookieValues(name),
+                i, names, data;
 
-            try {
-                key = Cookie.fetch(cookieName(name)).value;
+            // Backward compatibility 
+            if (! values.storageKey) {
+                names = localStorageNames(name, this.o);
                 for (i = 0; i < names.length; i++) {
-                    value = localStorage.getItem(names[i]);
-                    if (value) {
-                        return sjcl.decrypt(key, value);
+                    if (localStorage.getItem(names[i])) {
+                        values.storageKey = names[i];
+                        break;
                     }
                 }
+            }
+
+            data = localStorage.getItem(values.storageKey);
+
+            try {
+                return sjcl.decrypt(values.encryptKey, data);
             }
             catch (e) {
             }
@@ -109,9 +151,13 @@ else {
             return null;
         },
         remove: function(name) {
-            var o = this.o;
-            Cookie.bake(cookieName(name), '', o.sessionDomain, o.sessionPath, new Date(0));
-            localStorage.removeItem(localStorageName(name, o));
+            var values = fillinDefaultCookieValues(fetchCookieValues(name), this.o);
+
+            Cookie.bake(cookieName(name), '', values.domain, values.path, new Date(0));
+
+            if (values.storageKey) {
+                localStorage.removeItem(values.storageKey);
+            }
         }
     };
 }
