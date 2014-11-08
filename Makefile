@@ -5,7 +5,7 @@ all:
 clean:
 	-rm -rf node-lib mt-static
 	-rm -rf node_modules bower_components
-	-find . -name '.DS_Store' | xargs rm
+	-find . -name '.DS_Store' | xargs --no-run-if-empty rm
 
 dev:
 	-npm install
