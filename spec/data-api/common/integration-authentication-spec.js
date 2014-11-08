@@ -213,7 +213,7 @@ describe("DataAPI Integration Authorization", function(){
         }, "Want response", waitTimeout);
 
         runs(function() {
-            expect(result.error.code).toEqual(401);
+            expect(result.error.code).toEqual(403);
         });
     });
 
