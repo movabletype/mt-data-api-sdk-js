@@ -26,8 +26,8 @@ function fillinDefaultCookieValues(values, o) {
 
     return {
         data: values.data,
-        domain: o.sessionDomain || values.domain || undefined,
-        path:  o.sessionPath || path
+        domain: ( typeof o === 'undefined' ? undefined : o.sessionDomain ) || values.domain || undefined,
+        path: ( typeof o === 'undefined' ? undefined : o.sessionPath ) || path
     };
 }
 
