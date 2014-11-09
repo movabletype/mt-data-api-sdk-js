@@ -111,7 +111,7 @@ var DataAPI = function(options) {
  * @private
  * @type Number
  */
-DataAPI.version = 1;
+DataAPI.version = 2;
 
 /**
  * The key of access token of this api object.

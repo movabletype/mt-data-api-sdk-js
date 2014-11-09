@@ -154,7 +154,7 @@ describe("DataAPI Request", function(){
             });
 
             expect(xdr.open).toHaveBeenCalledWith(
-                'GET', dataApiBaseUrl + '/v1/endpoint-test?' + params + '&suppressResponseCodes=1'
+                'GET', dataApiBaseUrl + '/v2/endpoint-test?' + params + '&suppressResponseCodes=1'
             );
             expect(xdr.send).toHaveBeenCalledWith(null);
         });
@@ -174,7 +174,7 @@ describe("DataAPI Request", function(){
             });
 
             expect(xdr.open).toHaveBeenCalledWith(
-                'GET', dataApiBaseUrl + '/v1/endpoint-test?' + params + '&suppressResponseCodes=1'
+                'GET', dataApiBaseUrl + '/v2/endpoint-test?' + params + '&suppressResponseCodes=1'
             );
             expect(xdr.send).toHaveBeenCalledWith(null);
         });
@@ -471,7 +471,7 @@ describe("DataAPI Request", function(){
         });;
         api.request('GET', '/endpoint-test');
 
-        expect(url).toMatch(new RegExp(dataApiBaseUrl + '/v1/endpoint-test\\?_=\\d+'));
+        expect(url).toMatch(new RegExp(dataApiBaseUrl + '/v2/endpoint-test\\?_=\\d+'));
     });
 
     it("should be set timeout property if the timeout option is set", function(){
@@ -500,7 +500,7 @@ describe("DataAPI Request", function(){
         });;
         api.request('GET', '/endpoint-test');
 
-        expect(url).toEqual(dataApiBaseUrl + '/v1/endpoint-test?format=mpac');
+        expect(url).toEqual(dataApiBaseUrl + '/v2/endpoint-test?format=mpac');
     });
 
     it("should be set \"X-MT-Authorization\" request header if an accessToke is already set up", function(){
