@@ -241,7 +241,7 @@ describe("DataAPI Integration Authorization", function(){
                 var tokenData = api.getTokenData();
                 tokenData.accessToken = 'invalid access token';
 
-                api.uploadAsset(1, {
+                api.uploadAssetForSite(1, {
                     file: $('<input type="file" />').get(0)
                 }, function(response) {
                     result = response;
