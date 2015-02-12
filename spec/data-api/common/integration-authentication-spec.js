@@ -213,7 +213,7 @@ describe("DataAPI Integration Authorization", function(){
         }, "Want response", waitTimeout);
 
         runs(function() {
-            expect(result.error.code).toEqual(401);
+            expect(result.error.code).toEqual(403);
         });
     });
 
@@ -241,7 +241,7 @@ describe("DataAPI Integration Authorization", function(){
                 var tokenData = api.getTokenData();
                 tokenData.accessToken = 'invalid access token';
 
-                api.uploadAsset(1, {
+                api.uploadAssetForSite(1, {
                     file: $('<input type="file" />').get(0)
                 }, function(response) {
                     result = response;
