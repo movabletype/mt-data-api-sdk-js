@@ -2242,8 +2242,8 @@ DataAPI.registerFormat = function(key, spec) {
  * @param {String} key Session store name
  * @param {Object} spec
  *   @param {String} spec.save Saving method
- *   @param {String} spec.restore Restoring method
- *   @param {String} spec.dispose Disposing method
+ *   @param {String} spec.fetch Fetching method
+ *   @param {String} spec.remove Removing method
  * @category core
  */
 DataAPI.registerSessionStore = function(key, spec) {
