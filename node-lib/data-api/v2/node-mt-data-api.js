@@ -2269,8 +2269,8 @@ DataAPI.registerFormat = function(key, spec) {
  * @param {String} key Session store name
  * @param {Object} spec
  *   @param {String} spec.save Saving method
- *   @param {String} spec.restore Restoring method
- *   @param {String} spec.dispose Disposing method
+ *   @param {String} spec.fetch Fetching method
+ *   @param {String} spec.remove Removing method
  * @category core
  */
 DataAPI.registerSessionStore = function(key, spec) {
@@ -5047,7 +5047,7 @@ DataAPI.on('initialize', function() {
         "verb": "PUT"
     }, 
     {
-        "id": "delete_tempalte", 
+        "id": "delete_template", 
         "resources": null, 
         "route": "/sites/:site_id/templates/:template_id", 
         "verb": "DELETE"
