@@ -31,7 +31,7 @@ module.exports = function( grunt ) {
             ],
             options: {
                 specs: "spec/data-api/**/*.js",
-                host: "http://127.0.0.1:<%= connect.jasmine.options.port %>/",
+                host: "http://localhost:<%= connect.jasmine.options.port %>/",
                 helpers: [
                     "bower_components/sinon-browser/*.js",
                     "bower_components/underscore/underscore.js",
@@ -155,7 +155,7 @@ module.exports = function( grunt ) {
         connect: {
             jasmine: {
                 options: {
-                    hostname: "127.0.0.1",
+                    hostname: "localhost",
                     port: 9001,
                     middleware: function (connect, options) {
                         return [
@@ -168,7 +168,7 @@ module.exports = function( grunt ) {
                 proxies: [
                     {
                         context: "/cgi-bin",
-                        host: "127.0.0.1",
+                        host: "localhost",
                         port: "<%= movabletype.options.port %>",
                         https: false,
                         changeOrigin: false
@@ -178,7 +178,7 @@ module.exports = function( grunt ) {
         },
         open: {
             test: {
-                path: "http://127.0.0.1:<%= connect.jasmine.options.port %>/<%= jasmine['data-api'].options.outfile %>"
+                path: "http://localhost:<%= connect.jasmine.options.port %>/<%= jasmine['data-api'].options.outfile %>"
             }
         },
         jasmine: {
@@ -186,7 +186,7 @@ module.exports = function( grunt ) {
                 src: ["mt-static/data-api/v3/js/mt-data-api.js"],
                 options: {
                     specs: "spec/data-api/**/*.js",
-                    host: "http://127.0.0.1:<%= connect.jasmine.options.port %>/",
+                    host: "http://localhost:<%= connect.jasmine.options.port %>/",
                     helpers: [
                         "bower_components/sinon-browser/*.js",
                         "bower_components/underscore/underscore.js",

@@ -10,7 +10,7 @@ describe("DataAPI Utility methods", function(){
     });
 
     it("should be retrieved an authorization URL successfully", function(){
-        var redirectUrl = 'http://127.0.0.1/',
+        var redirectUrl = 'http://localhost/',
             url         = api.getAuthorizationUrl(redirectUrl);
             expectedUrl = dataApiBaseUrl + '/v' + api.getVersion() + '/authorization?clientId=Test&redirectUrl=' + redirectUrl;
 
