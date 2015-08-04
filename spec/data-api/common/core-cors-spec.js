@@ -31,7 +31,7 @@
 
         runs(function() {
             expect(result.error).toBeFalsy();
-            expect(result.version).toEqual(3);
+            expect(result.version).toEqual("3");
         });
     });
 
