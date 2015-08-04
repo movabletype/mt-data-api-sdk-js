@@ -2,7 +2,7 @@ describe("DataAPI Integration Authorization", function(){
     var api,
         loginCredentials = {
             username: 'Chuck D',
-            password: 'bass'
+            password: 'seecret'
         };
 
     beforeEach(function() {
