@@ -29,7 +29,7 @@ module.exports = function( grunt ) {
                 "(function() {",
                 "var k,",
                 "    global   = new Function(\"return this;\")(),",
-                "    hostname = global.location ? global.location.hostname : 'localhost',",
+                "    hostname = global.location ? global.location.hostname : '127.0.0.1',",
                 "    jasminePortRegExp = /" + grunt.config.get("connect.jasmine.options.port") + "/,",
                 "    hostWithPort = function(host, port) {",
                 "        if (jasminePortRegExp.test(host)) {",
