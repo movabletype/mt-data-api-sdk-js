@@ -10,6 +10,7 @@ before_install:
   - mysql -e 'CREATE DATABASE mt_test'
   - sudo apt-get update
   - sudo apt-get install cpanminus libplack-perl libdbd-mysql-perl 2>&1
+  - sudo cpanm --self-upgrade
   - sudo cpanm -n Digest::SHA
   - sudo cpanm -n Digest::SHA1
   - sudo cpanm -n CGI::PSGI
