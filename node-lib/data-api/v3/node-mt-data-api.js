@@ -1,5 +1,5 @@
 /*
- * Movable Type DataAPI SDK for JavaScript v2
+ * Movable Type DataAPI SDK for JavaScript v3
  * https://github.com/movabletype/mt-data-api-sdk-js
  * Copyright (c) 2013-2015 Six Apart, Ltd.
  * This program is distributed under the terms of the MIT license.
@@ -26,6 +26,33 @@
 }(typeof window === "undefined" ? undefined : window, function(window, undefined) {
 
 "use strict";
+
+if (typeof window === 'undefined') {
+    window = {
+        XMLHttpRequest: require('xmlhttprequest').XMLHttpRequest,
+        FormData: require('form-data'),
+        File: require('stream').Stream
+    };
+    (function() {
+        var fs = require('fs'),
+            _append = window.FormData.prototype.append;
+
+        window.FormData.prototype.append = function(field, value, options) {
+            if (! options && value.hasOwnProperty('fd')) {
+                try {
+                    options = {knownLength: fs.statSync(value.path).size};
+                }
+                catch (e) {
+                }
+            }
+
+            var result  = _append.call(this, field, value, options);
+            this.length = this.getLengthSync();
+
+            return result;
+        };
+    })();
+}
 
 /**
  * @namespace MT
@@ -140,7 +167,7 @@ var DataAPI = function(options) {
  * @private
  * @type Number
  */
-DataAPI.version = 2;
+DataAPI.version = 3;
 
 /**
  * The key of access token of this api object.
@@ -5286,6 +5313,24 @@ DataAPI.on('initialize', function() {
         "resources": null
     },
     {
+        "id": "authenticate",
+        "route": "/authentication",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset",
+        "route": "/assets/upload",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset_for_site",
+        "route": "/sites/:site_id/assets/upload",
+        "verb": "POST",
+        "resources": null
+    },
+    {
         "id": "list_fields",
         "route": "/sites/:site_id/fields",
         "verb": "GET",
@@ -5463,6 +5508,67 @@ DataAPI.on('initialize', function() {
 
     );
 });
+
+;(function() {
+    var fs   = require("fs"),
+        path = require("path");
+
+    function getPath(o) {
+        return o.sessionPath || path.join(process.env["HOME"], ".mt-data-api.json");
+    }
+
+    function existsSync(p) {
+        return !!fs.existsSync ? fs.existsSync(p) : path.existsSync(p);
+    }
+
+    DataAPI.registerSessionStore('fs', {
+        save: function(name, data) {
+            var p = getPath(this.o),
+                d = {},
+                newFile = true;
+            if (existsSync(p)) {
+                try {
+                    d = JSON.parse(fs.readFileSync(p, "utf8"));
+                    newFile = false;
+                }
+                catch (e) {
+                    // Ignore
+                }
+            }
+            d[name] = data;
+
+            fs.writeFileSync(p, JSON.stringify(d), "utf8");
+            if (newFile) {
+                fs.chmodSync(p, parseInt("600", 8));
+            }
+        },
+        fetch: function(name) {
+            var p = getPath(this.o),
+                d = {};
+            if (existsSync(p)) {
+                try {
+                    d = JSON.parse(fs.readFileSync(p, "utf8"));
+                }
+                catch (e) {
+                    // Ignore
+                }
+            }
+
+            return d[name];
+        },
+        remove: function(name) {
+            var p = getPath(this.o),
+                d = {};
+            if (existsSync(p)) {
+                d = JSON.parse(fs.readFileSync(p, "utf8"));
+                if (name in d) {
+                    delete d[name];
+                    fs.writeFileSync(p, JSON.stringify(d), "utf8");
+                }
+            }
+        },
+    });
+})();
 
 window.MT         = window.MT || {};
 window.MT.DataAPI = window.MT.DataAPI || DataAPI;

@@ -1,5 +1,5 @@
 /*
- * Movable Type DataAPI SDK for JavaScript v2
+ * Movable Type DataAPI SDK for JavaScript v3
  * https://github.com/movabletype/mt-data-api-sdk-js
  * Copyright (c) 2013-2015 Six Apart, Ltd.
  * This program is distributed under the terms of the MIT license.
@@ -140,7 +140,7 @@ var DataAPI = function(options) {
  * @private
  * @type Number
  */
-DataAPI.version = 2;
+DataAPI.version = 3;
 
 /**
  * The key of access token of this api object.
@@ -5283,6 +5283,24 @@ DataAPI.on('initialize', function() {
         "id": "backup_site",
         "route": "/sites/:site_id/backup",
         "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "authenticate",
+        "route": "/authentication",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset",
+        "route": "/assets/upload",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset_for_site",
+        "route": "/sites/:site_id/assets/upload",
+        "verb": "POST",
         "resources": null
     },
     {

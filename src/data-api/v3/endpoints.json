@@ -1074,6 +1074,24 @@
         "resources": null
     },
     {
+        "id": "authenticate",
+        "route": "/authentication",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset",
+        "route": "/assets/upload",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset_for_site",
+        "route": "/sites/:site_id/assets/upload",
+        "verb": "POST",
+        "resources": null
+    },
+    {
         "id": "list_fields",
         "route": "/sites/:site_id/fields",
         "verb": "GET",
