@@ -1,3 +1,5 @@
+sudo: required
+dist: precise
 language: node_js
 node_js:
   - 0.10
@@ -31,7 +33,7 @@ before_install:
   - sudo cpanm -n XML::Parser
   - sudo cpanm -n Starman
   - sudo cpanm -n Test::Deep
-  - git clone --branch $TRAVIS_BRANCH --depth=1 https://github.com/movabletype/movabletype.git $MT_HOME
+  - git clone --depth=1 https://github.com/movabletype/movabletype.git $MT_HOME
   - perl -i -pe 's{DBUser mt}{DBUser travis}g' $MT_HOME/t/mysql-test.cfg
   - perl -i -pe 's{(eval "use MT::PSGI;";)}{$1 die \$@ if \$@;}g' $MT_HOME/t/mysql-test-psgi-server.pl
 notifications:
