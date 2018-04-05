@@ -5240,13 +5240,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "list_category_sets",
-        "route": "/sites/:site_id/category_sets",
+        "route": "/sites/:site_id/categorySets",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "create_category_set",
-        "route": "/sites/:site_id/category_sets",
+        "route": "/sites/:site_id/categorySets",
         "verb": "POST",
         "resources": [
             "category_set"
@@ -5254,13 +5254,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "get_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id",
+        "route": "/sites/:site_id/categorySets/:category_set_id",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "update_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id",
+        "route": "/sites/:site_id/categorySets/:category_set_id",
         "verb": "PUT",
         "resources": [
             "category_set"
@@ -5268,37 +5268,37 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "delete_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id",
+        "route": "/sites/:site_id/categorySets/:category_set_id",
         "verb": "DELETE",
         "resources": null
     },
     {
         "id": "list_categories_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "list_parent_categories_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories/:category_id/parents",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id/parents",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "list_sibling_categories_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories/:category_id/siblings",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id/siblings",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "list_child_categories_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories/:category_id/children",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id/children",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "create_category_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories",
         "verb": "POST",
         "resources": [
             "category"
@@ -5306,13 +5306,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "get_category_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories/:category_id",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "update_category_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories/:category_id",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id",
         "verb": "PUT",
         "resources": [
             "category"
@@ -5320,25 +5320,25 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "delete_category_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories/:category_id",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id",
         "verb": "DELETE",
         "resources": null
     },
     {
         "id": "permutate_categories_for_category_set",
-        "route": "/sites/:site_id/category_sets/:category_set_id/categories/permutate",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/permutate",
         "verb": "POST",
         "resources": null
     },
     {
         "id": "list_content_types",
-        "route": "/sites/:site_id/content_types",
+        "route": "/sites/:site_id/contentTypes",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "create_content_type",
-        "route": "/sites/:site_id/content_types",
+        "route": "/sites/:site_id/contentTypes",
         "verb": "POST",
         "resources": [
             "content_type"
@@ -5346,13 +5346,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "get_content_type",
-        "route": "/sites/:site_id/content_types/:content_type_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "update_content_type",
-        "route": "/sites/:site_id/content_types/:content_type_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id",
         "verb": "PUT",
         "resources": [
             "content_type"
@@ -5360,19 +5360,19 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "delete_content_type",
-        "route": "/sites/:site_id/content_types/:content_type_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id",
         "verb": "DELETE",
         "resources": null
     },
     {
         "id": "list_content_fields",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_fields",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "create_content_field",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_fields",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields",
         "verb": "POST",
         "resources": [
             "content_field"
@@ -5380,13 +5380,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "get_content_field",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_fields/:content_field_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/:content_field_id",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "update_content_field",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_fields/:content_field_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/:content_field_id",
         "verb": "PUT",
         "resources": [
             "content_field"
@@ -5394,25 +5394,25 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "delete_content_field",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_fields/:content_field_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/:content_field_id",
         "verb": "DELETE",
         "resources": null
     },
     {
         "id": "permutate_content_fields",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_fields/permutate",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/permutate",
         "verb": "POST",
         "resources": null
     },
     {
         "id": "list_content_data",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "create_content_data",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data",
         "verb": "POST",
         "resources": [
             "content_data"
@@ -5420,13 +5420,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "get_content_data",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_data/:content_data_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id",
         "verb": "GET",
         "resources": null
     },
     {
         "id": "update_content_data",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_data/:content_data_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id",
         "verb": "PUT",
         "resources": [
             "content_data"
@@ -5434,13 +5434,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "delete_content_data",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_data/:content_data_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id",
         "verb": "DELETE",
         "resources": null
     },
     {
         "id": "preview_content_data_by_id",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_data/:content_data_id/preview",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id/preview",
         "verb": "POST",
         "resources": [
             "content_data"
@@ -5448,7 +5448,7 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "preview_content_data",
-        "route": "/sites/:site_id/content_types/:content_type_id/content_data/preview",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/preview",
         "verb": "POST",
         "resources": [
             "content_data"
@@ -5456,7 +5456,13 @@ DataAPI.on('initialize', function() {
     },
     {
         "id": "publish_content_data",
-        "route": "/publish/content_data",
+        "route": "/publish/contentData",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "search",
+        "route": "/search",
         "verb": "GET",
         "resources": null
     },
@@ -5567,40 +5573,6 @@ DataAPI.on('initialize', function() {
         ]
     },
     {
-        "id": "list_formatted_texts",
-        "route": "/sites/:site_id/formatted_texts",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "get_formatted_text",
-        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "create_formatted_text",
-        "route": "/sites/:site_id/formatted_texts",
-        "verb": "POST",
-        "resources": [
-            "formatted_text"
-        ]
-    },
-    {
-        "id": "update_formatted_text",
-        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
-        "verb": "PUT",
-        "resources": [
-            "formatted_text"
-        ]
-    },
-    {
-        "id": "delete_formatted_text",
-        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
-        "verb": "DELETE",
-        "resources": null
-    },
-    {
         "id": "list_trackbacks",
         "route": "/sites/:site_id/trackbacks",
         "verb": "GET",
@@ -5636,6 +5608,40 @@ DataAPI.on('initialize', function() {
         "id": "list_trackbacks_for_page",
         "route": "/sites/:site_id/pages/:page_id/trackbacks",
         "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_formatted_texts",
+        "route": "/sites/:site_id/formatted_texts",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "get_formatted_text",
+        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "create_formatted_text",
+        "route": "/sites/:site_id/formatted_texts",
+        "verb": "POST",
+        "resources": [
+            "formatted_text"
+        ]
+    },
+    {
+        "id": "update_formatted_text",
+        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
+        "verb": "PUT",
+        "resources": [
+            "formatted_text"
+        ]
+    },
+    {
+        "id": "delete_formatted_text",
+        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
+        "verb": "DELETE",
         "resources": null
     }
 ]
