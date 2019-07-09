@@ -1,7 +1,7 @@
 /*
- * Movable Type DataAPI SDK for JavaScript v2
+ * Movable Type DataAPI SDK for JavaScript v4
  * https://github.com/movabletype/mt-data-api-sdk-js
- * Copyright (c) 2013-2015 Six Apart, Ltd.
+ * Copyright (c) 2013-2018 Six Apart, Ltd.
  * This program is distributed under the terms of the MIT license.
  *
  * Includes jQuery JavaScript Library in some parts.
@@ -167,7 +167,7 @@ var DataAPI = function(options) {
  * @private
  * @type Number
  */
-DataAPI.version = 2;
+DataAPI.version = 4;
 
 /**
  * The key of access token of this api object.
@@ -4335,86 +4335,6 @@ DataAPI.on('initialize', function() {
         "resources": null
     },
     {
-        "id": "list_comments",
-        "route": "/sites/:site_id/comments",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "list_comments_for_entry",
-        "route": "/sites/:site_id/entries/:entry_id/comments",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "create_comment",
-        "route": "/sites/:site_id/entries/:entry_id/comments",
-        "verb": "POST",
-        "resources": [
-            "comment"
-        ]
-    },
-    {
-        "id": "create_reply_comment",
-        "route": "/sites/:site_id/entries/:entry_id/comments/:comment_id/replies",
-        "verb": "POST",
-        "resources": [
-            "comment"
-        ]
-    },
-    {
-        "id": "get_comment",
-        "route": "/sites/:site_id/comments/:comment_id",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "update_comment",
-        "route": "/sites/:site_id/comments/:comment_id",
-        "verb": "PUT",
-        "resources": [
-            "comment"
-        ]
-    },
-    {
-        "id": "delete_comment",
-        "route": "/sites/:site_id/comments/:comment_id",
-        "verb": "DELETE",
-        "resources": null
-    },
-    {
-        "id": "list_trackbacks",
-        "route": "/sites/:site_id/trackbacks",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "list_trackbacks_for_entry",
-        "route": "/sites/:site_id/entries/:entry_id/trackbacks",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "get_trackback",
-        "route": "/sites/:site_id/trackbacks/:ping_id",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "update_trackback",
-        "route": "/sites/:site_id/trackbacks/:ping_id",
-        "verb": "PUT",
-        "resources": [
-            "trackback"
-        ]
-    },
-    {
-        "id": "delete_trackback",
-        "route": "/sites/:site_id/trackbacks/:ping_id",
-        "verb": "DELETE",
-        "resources": null
-    },
-    {
         "id": "upload_asset",
         "route": "/sites/:site_id/assets/upload",
         "verb": "POST",
@@ -4766,34 +4686,6 @@ DataAPI.on('initialize', function() {
         "id": "preview_page",
         "route": "/sites/:site_id/pages/preview",
         "verb": "POST",
-        "resources": null
-    },
-    {
-        "id": "list_comments_for_page",
-        "route": "/sites/:site_id/pages/:page_id/comments",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "create_comment_for_page",
-        "route": "/sites/:site_id/pages/:page_id/comments",
-        "verb": "POST",
-        "resources": [
-            "comment"
-        ]
-    },
-    {
-        "id": "create_reply_comment_for_page",
-        "route": "/sites/:site_id/pages/:page_id/comments/:comment_id/replies",
-        "verb": "POST",
-        "resources": [
-            "comment"
-        ]
-    },
-    {
-        "id": "list_trackbacks_for_page",
-        "route": "/sites/:site_id/pages/:page_id/trackbacks",
-        "verb": "GET",
         "resources": null
     },
     {
@@ -5313,6 +5205,268 @@ DataAPI.on('initialize', function() {
         "resources": null
     },
     {
+        "id": "authenticate",
+        "route": "/authentication",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset",
+        "route": "/assets/upload",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "upload_asset_for_site",
+        "route": "/sites/:site_id/assets/upload",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "create_entry",
+        "route": "/sites/:site_id/entries",
+        "verb": "POST",
+        "resources": [
+            "entry"
+        ]
+    },
+    {
+        "id": "update_entry",
+        "route": "/sites/:site_id/entries/:entry_id",
+        "verb": "PUT",
+        "resources": [
+            "entry"
+        ]
+    },
+    {
+        "id": "list_category_sets",
+        "route": "/sites/:site_id/categorySets",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "create_category_set",
+        "route": "/sites/:site_id/categorySets",
+        "verb": "POST",
+        "resources": [
+            "category_set"
+        ]
+    },
+    {
+        "id": "get_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "update_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id",
+        "verb": "PUT",
+        "resources": [
+            "category_set"
+        ]
+    },
+    {
+        "id": "delete_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id",
+        "verb": "DELETE",
+        "resources": null
+    },
+    {
+        "id": "list_categories_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_parent_categories_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id/parents",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_sibling_categories_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id/siblings",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_child_categories_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id/children",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "create_category_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories",
+        "verb": "POST",
+        "resources": [
+            "category"
+        ]
+    },
+    {
+        "id": "get_category_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "update_category_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id",
+        "verb": "PUT",
+        "resources": [
+            "category"
+        ]
+    },
+    {
+        "id": "delete_category_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/:category_id",
+        "verb": "DELETE",
+        "resources": null
+    },
+    {
+        "id": "permutate_categories_for_category_set",
+        "route": "/sites/:site_id/categorySets/:category_set_id/categories/permutate",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "list_content_types",
+        "route": "/sites/:site_id/contentTypes",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "create_content_type",
+        "route": "/sites/:site_id/contentTypes",
+        "verb": "POST",
+        "resources": [
+            "content_type"
+        ]
+    },
+    {
+        "id": "get_content_type",
+        "route": "/sites/:site_id/contentTypes/:content_type_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "update_content_type",
+        "route": "/sites/:site_id/contentTypes/:content_type_id",
+        "verb": "PUT",
+        "resources": [
+            "content_type"
+        ]
+    },
+    {
+        "id": "delete_content_type",
+        "route": "/sites/:site_id/contentTypes/:content_type_id",
+        "verb": "DELETE",
+        "resources": null
+    },
+    {
+        "id": "list_content_fields",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "create_content_field",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields",
+        "verb": "POST",
+        "resources": [
+            "content_field"
+        ]
+    },
+    {
+        "id": "get_content_field",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/:content_field_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "update_content_field",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/:content_field_id",
+        "verb": "PUT",
+        "resources": [
+            "content_field"
+        ]
+    },
+    {
+        "id": "delete_content_field",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/:content_field_id",
+        "verb": "DELETE",
+        "resources": null
+    },
+    {
+        "id": "permutate_content_fields",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/fields/permutate",
+        "verb": "POST",
+        "resources": null
+    },
+    {
+        "id": "list_content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "create_content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data",
+        "verb": "POST",
+        "resources": [
+            "content_data"
+        ]
+    },
+    {
+        "id": "get_content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "update_content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id",
+        "verb": "PUT",
+        "resources": [
+            "content_data"
+        ]
+    },
+    {
+        "id": "delete_content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id",
+        "verb": "DELETE",
+        "resources": null
+    },
+    {
+        "id": "preview_content_data_by_id",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/:content_data_id/preview",
+        "verb": "POST",
+        "resources": [
+            "content_data"
+        ]
+    },
+    {
+        "id": "preview_content_data",
+        "route": "/sites/:site_id/contentTypes/:content_type_id/data/preview",
+        "verb": "POST",
+        "resources": [
+            "content_data"
+        ]
+    },
+    {
+        "id": "publish_content_data",
+        "route": "/publish/contentData",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "search",
+        "route": "/search",
+        "verb": "GET",
+        "resources": null
+    },
+    {
         "id": "list_fields",
         "route": "/sites/:site_id/fields",
         "verb": "GET",
@@ -5347,109 +5501,113 @@ DataAPI.on('initialize', function() {
         "resources": null
     },
     {
-        "id": "list_groups",
-        "route": "/groups",
+        "id": "list_comments",
+        "route": "/sites/:site_id/comments",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "list_groups_for_user",
-        "route": "/users/:user_id/groups",
+        "id": "list_comments_for_entry",
+        "route": "/sites/:site_id/entries/:entry_id/comments",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "get_group",
-        "route": "/groups/:group_id",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "create_group",
-        "route": "/groups",
+        "id": "create_comment",
+        "route": "/sites/:site_id/entries/:entry_id/comments",
         "verb": "POST",
         "resources": [
-            "group"
+            "comment"
         ]
     },
     {
-        "id": "update_group",
-        "route": "/groups/:group_id",
+        "id": "create_reply_comment",
+        "route": "/sites/:site_id/entries/:entry_id/comments/:comment_id/replies",
+        "verb": "POST",
+        "resources": [
+            "comment"
+        ]
+    },
+    {
+        "id": "get_comment",
+        "route": "/sites/:site_id/comments/:comment_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "update_comment",
+        "route": "/sites/:site_id/comments/:comment_id",
         "verb": "PUT",
         "resources": [
-            "group"
+            "comment"
         ]
     },
     {
-        "id": "delete_group",
-        "route": "/groups/:group_id",
+        "id": "delete_comment",
+        "route": "/sites/:site_id/comments/:comment_id",
         "verb": "DELETE",
         "resources": null
     },
     {
-        "id": "synchronize_groups",
-        "route": "/groups/synchronize",
-        "verb": "POST",
-        "resources": null
-    },
-    {
-        "id": "list_permissions_for_group",
-        "route": "/groups/:group_id/permissions",
+        "id": "list_comments_for_page",
+        "route": "/sites/:site_id/pages/:page_id/comments",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "grant_permission_to_group",
-        "route": "/groups/:group_id/permissions/grant",
+        "id": "create_comment_for_page",
+        "route": "/sites/:site_id/pages/:page_id/comments",
         "verb": "POST",
-        "resources": null
+        "resources": [
+            {
+                "comment": null
+            }
+        ]
     },
     {
-        "id": "revoke_permission_from_group",
-        "route": "/groups/:group_id/permissions/revoke",
+        "id": "create_reply_comment_for_page",
+        "route": "/sites/:site_id/pages/:page_id/comments/:comment_id/replies",
         "verb": "POST",
-        "resources": null
+        "resources": [
+            "comment"
+        ]
     },
     {
-        "id": "list_members_for_group",
-        "route": "/groups/:group_id/members",
+        "id": "list_trackbacks",
+        "route": "/sites/:site_id/trackbacks",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "get_member_for_group",
-        "route": "/groups/:group_id/members/:member_id",
+        "id": "list_trackbacks_for_entry",
+        "route": "/sites/:site_id/entries/:entry_id/trackbacks",
         "verb": "GET",
         "resources": null
     },
     {
-        "id": "add_member_to_group",
-        "route": "/groups/:group_id/members",
-        "verb": "POST",
+        "id": "get_trackback",
+        "route": "/sites/:site_id/trackbacks/:ping_id",
+        "verb": "GET",
         "resources": null
     },
     {
-        "id": "remove_member_from_group",
-        "route": "/groups/:group_id/members/:member_id",
+        "id": "update_trackback",
+        "route": "/sites/:site_id/trackbacks/:ping_id",
+        "verb": "PUT",
+        "resources": [
+            "trackback"
+        ]
+    },
+    {
+        "id": "delete_trackback",
+        "route": "/sites/:site_id/trackbacks/:ping_id",
         "verb": "DELETE",
         "resources": null
     },
     {
-        "id": "bulk_author_import",
-        "route": "/users/import",
-        "verb": "POST",
-        "resources": null
-    },
-    {
-        "id": "bulk_author_export",
-        "route": "/users/export",
+        "id": "list_trackbacks_for_page",
+        "route": "/sites/:site_id/pages/:page_id/trackbacks",
         "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "synchronize_users",
-        "route": "/users/synchronize",
-        "verb": "POST",
         "resources": null
     },
     {

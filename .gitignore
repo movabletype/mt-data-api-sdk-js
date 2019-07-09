@@ -21,3 +21,7 @@ spec/runner.html
 
 # Generated source for coverage
 .src/data-api/coverage
+
+package-lock.json
+yarn.lock
+
