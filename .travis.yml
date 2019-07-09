@@ -2,7 +2,7 @@ sudo: required
 dist: precise
 language: node_js
 node_js:
-  - 0.10
+  - 6
 env:
   - MT_HOME=/home/travis/mt
 before_install:
@@ -11,8 +11,8 @@ before_install:
   - bower install
   - mysql -e 'CREATE DATABASE mt_test'
   - sudo apt-get update
-  - sudo apt-get install cpanminus libplack-perl libdbd-mysql-perl 2>&1
-  - sudo cpanm App::cpanminus
+  - sudo apt-get install cpanminus libplack-perl libdbd-mysql-perl curl 2>&1
+  - curl -sL https://cpanmin.us | perl - --sudo App::cpanminus
   - sudo cpanm -n Digest::SHA
   - sudo cpanm -n Digest::SHA1
   - sudo cpanm -n CGI::PSGI
