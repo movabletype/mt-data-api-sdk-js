@@ -12,7 +12,7 @@ before_install:
   - mysql -e 'CREATE DATABASE mt_test'
   - sudo apt-get update
   - sudo apt-get install cpanminus libplack-perl libdbd-mysql-perl 2>&1
-  - sudo cpanm --self-upgrade
+  - sudo cpanm App::cpanminus
   - sudo cpanm -n Digest::SHA
   - sudo cpanm -n Digest::SHA1
   - sudo cpanm -n CGI::PSGI
@@ -33,7 +33,7 @@ before_install:
   - sudo cpanm -n XML::Parser
   - sudo cpanm -n Starman
   - sudo cpanm -n Test::Deep
-  - git clone --depth=1 --branch=develop https://github.com/movabletype/movabletype.git $MT_HOME
+  - git clone --branch develop --depth=1 https://github.com/movabletype/movabletype.git $MT_HOME
   - perl -i -pe 's{DBUser mt}{DBUser travis}g' $MT_HOME/t/mysql-test.cfg
   - perl -i -pe 's{(eval "use MT::PSGI;";)}{$1 die \$@ if \$@;}g' $MT_HOME/t/mysql-test-psgi-server.pl
 notifications:
