@@ -19,3 +19,10 @@ build:
 
 test:
 	-grunt test
+
+JSON_VERSION  := v4
+JSON_BASE_URL := http://mt-app.movabletype.test/cgi-bin/MT7-R4601/mt-data-api.cgi
+
+json:
+	perl tools/make-json.pl --version=$(JSON_VERSION) --base-url=$(JSON_BASE_URL) > src/data-api/$(JSON_VERSION)/endpoints.json
+
