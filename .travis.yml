@@ -1,8 +1,9 @@
 sudo: required
-dist: precise
 language: node_js
 node_js:
   - 6
+services:
+  - mysql
 env:
   - MT_HOME=/home/travis/mt
 before_install:
