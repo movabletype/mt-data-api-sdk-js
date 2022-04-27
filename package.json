@@ -11,7 +11,7 @@
   "main": "./node-lib/bootstrap",
   "dependencies": {
     "form-data": "~0.0.10",
-    "xmlhttprequest": "git://github.com/usualoma/node-XMLHttpRequest.git"
+    "xmlhttprequest": "https://github.com/usualoma/node-XMLHttpRequest.git"
   },
   "devDependencies": {
     "matchdep": "~0.1.2",
