@@ -4,7 +4,7 @@ var path   = require("path"),
     lib    = path.join(base, "node-lib");
 
 global.MT = {
-    DataAPI: require(path.join(lib, "bootstrap"))["v5"]
+    DataAPI: require(path.join(lib, "bootstrap"))["v6"]
 };
 
 global.sinon  = require(path.join(base, "bower_components", "sinon"));
