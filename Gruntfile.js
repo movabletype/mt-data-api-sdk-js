@@ -3,7 +3,6 @@ module.exports = function( grunt ) {
 
     var srcHintOptionsBrowser = grunt.file.readJSON("src/.jshintrc"),
         srcHintOptionsNode    = grunt.file.readJSON("src/.jshintrc"),
-        proxySnippet          = require("grunt-connect-proxy/lib/utils").proxyRequest,
         srcBrowser            = [
             "src/data-api/common/core.js",
             "src/data-api/common/cookie.js",
@@ -19,35 +18,6 @@ module.exports = function( grunt ) {
         ]);
     srcHintOptionsBrowser.browser = true;
     srcHintOptionsNode.node = true;
-
-    function getJasmineDataApiCoverageConfig(report) {
-        return {
-            src: [
-                "src/data-api/common/core.js",
-                "src/data-api/common/sessionstore-cookie.js",
-                "src/data-api/common/sessionstore-cookie-encrypted.js",
-                "<%= preprocess['data-api-coverage-endpoints'].dest %>",
-                "src/data-api/common/exports.js",
-            ],
-            options: {
-                specs: "spec/data-api/**/*.js",
-                host: "http://localhost:<%= connect.jasmine.options.port %>/",
-                helpers: [
-                    "bower_components/sinon-browser/*.js",
-                    "bower_components/underscore/underscore.js",
-                    "bower_components/jquery/jquery.min.js",
-                    "spec/helpers/common/*.js",
-                    "src/data-api/common/sjcl.js",
-                    "src/data-api/common/cookie.js",
-                ],
-                template: require("grunt-template-jasmine-istanbul"),
-                templateOptions: {
-                    coverage: "reports/coverage/coverage.json",
-                    report: report || "reports/coverage",
-                }
-            }
-        };
-    }
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
@@ -75,22 +45,6 @@ module.exports = function( grunt ) {
             "data-api-coverage-endpoints": {
                 dest: ".src/data-api/coverage/endpoints.js",
                 src: "src/data-api/v6/endpoints.js"
-            }
-        },
-        watch: {
-            "data-api": {
-                files: [
-                    "src/**/*.js",
-                    "./spec/data-api/**/*.js",
-                ],
-                tasks: "test"
-            },
-            "data-api-coverage": {
-                files: [
-                    "src/**/*.js",
-                    "./spec/data-api/**/*.js",
-                ],
-                tasks: "test-browser-coverage"
             }
         },
         uglify: {
@@ -143,44 +97,6 @@ module.exports = function( grunt ) {
                 }
             }
         },
-        plato: {
-            options: {
-                jshint: srcHintOptionsBrowser
-            },
-            files: {
-                dest: "reports/plato",
-                src: srcBrowser
-            }
-        },
-        connect: {
-            jasmine: {
-                options: {
-                    hostname: "localhost",
-                    port: 9001,
-                    middleware: function (connect, options) {
-                        return [
-                            proxySnippet,
-                            connect.static(options.base),
-                            connect.directory(options.base)
-                        ];
-                    }
-                },
-                proxies: [
-                    {
-                        context: "/cgi-bin",
-                        host: "localhost",
-                        port: "<%= movabletype.options.port %>",
-                        https: false,
-                        changeOrigin: false
-                    }
-                ]
-            },
-        },
-        open: {
-            test: {
-                path: "http://localhost:<%= connect.jasmine.options.port %>/<%= jasmine['data-api'].options.outfile %>"
-            }
-        },
         jasmine: {
             "data-api": {
                 src: ["mt-static/data-api/v6/js/mt-data-api.js"],
@@ -199,10 +115,6 @@ module.exports = function( grunt ) {
                     outfile: "spec/runner.html",
                 }
             },
-            "data-api-coverage": getJasmineDataApiCoverageConfig(),
-            "data-api-coverage-text": getJasmineDataApiCoverageConfig({
-                type: "text"
-            }),
         },
         jasmine_node: {
             projectRoot: "spec",
@@ -214,33 +126,13 @@ module.exports = function( grunt ) {
                 consolidate: true
             }
         },
-        prompt: {
-            wait: {
-                options: {
-                    questions: [
-                        {
-                            config: "wait",
-                            type: "input",
-                            message: "Hit enter key, if you finished a test.",
-                        }
-                    ]
-                }
-            }
-        },
-        movabletype: {
-            options: {
-                port: 9002,
-                helper: "spec/helpers/common/psgi-server-status-helper.js"
-            }
-        }
     });
-
 
     grunt.task.loadTasks("tasks");
-
-    require("matchdep").filterDev("grunt-*").forEach(function (name) {
-        if (!/template/.test(name)) {
-            grunt.loadNpmTasks(name);
-        }
-    });
+    grunt.task.loadNpmTasks("grunt-contrib-jasmine");
+    grunt.task.loadNpmTasks("grunt-contrib-jasmine-node");
+    grunt.task.loadNpmTasks("grunt-contrib-jshint");
+    grunt.task.loadNpmTasks("grunt-contrib-uglify");
+    grunt.task.loadNpmTasks("grunt-contrib-clean");
+    grunt.task.loadNpmTasks("grunt-preprocess");
 };
