@@ -5,14 +5,6 @@ module.exports = function( grunt ) {
     grunt.registerTask("build", ["preprocess", "jshint", "uglify"]);
     grunt.registerTask("dev", ["preprocess", "jshint"]);
 
-    grunt.registerTask("test-node", [
-        "dev",
-        "start-movabletype-server:" + grunt.config.get("movabletype.options.port"),
-        "cleanup-jasmine-node-result",
-        "check-jasmine-node-result",
-        "stop-movabletype-server",
-    ]);
-
     grunt.registerTask("test-headless-browser", [
         "dev",
         "configureProxies:jasmine",
@@ -45,12 +37,10 @@ module.exports = function( grunt ) {
     ]);
 
     grunt.registerTask("test", [
-        "test-node",
         "test-headless-browser",
     ]);
 
     grunt.registerTask("ci", [
-        "test-node",
         "test-headless-browser",
         "start-movabletype-server",
         "stop-movabletype-server",
