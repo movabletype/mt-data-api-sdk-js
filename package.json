@@ -9,6 +9,9 @@
   },
   "author": "Six Apart, Ltd.",
   "main": "./node-lib/bootstrap",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
     "matchdep": "~0.1.2",
     "grunt-contrib-jshint": "~0.6.0",
