@@ -54,7 +54,6 @@ module.exports = function( grunt ) {
         "test-node",
         "test-headless-browser",
         "start-movabletype-server",
-        "jasmine:data-api-coverage-text",
         "stop-movabletype-server",
     ]);
 };
