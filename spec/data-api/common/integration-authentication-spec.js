@@ -43,7 +43,7 @@ describe("DataAPI Integration Authorization", function(){
         var result = null,
             expiresIn = 60,
             timeValue = 0;
-        spyOn(Date.prototype, 'getTime').andCallFake(function() {
+        spyOn(Date.prototype, 'getTime').and.callFake(function() {
             return timeValue;
         });
 

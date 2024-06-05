@@ -83,7 +83,7 @@
             xhr  = api.newXMLHttpRequest();
 
         spyOn(xhr, 'open');
-        spyOn(xhr, 'send').andCallFake(function() {
+        spyOn(xhr, 'send').and.callFake(function() {
             sent = true;
         });
         spyOn(xhr, 'setRequestHeader');
@@ -100,7 +100,7 @@
             xhr  = api.newXMLHttpRequest();
 
         spyOn(xhr, 'open');
-        spyOn(xhr, 'send').andCallFake(function() {
+        spyOn(xhr, 'send').and.callFake(function() {
             sent = true;
         });
         spyOn(xhr, 'setRequestHeader');

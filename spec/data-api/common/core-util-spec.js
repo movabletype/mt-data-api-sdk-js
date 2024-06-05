@@ -45,7 +45,7 @@ describe("DataAPI Utility methods", function(){
     it("should be expired accessToken after expiresIn seconds passed", function(){
         var expiresIn = 60,
             timeValue = 0;
-        spyOn(Date.prototype, 'getTime').andCallFake(function() {
+        spyOn(Date.prototype, 'getTime').and.callFake(function() {
             return timeValue;
         });
         api.storeTokenData({
@@ -61,7 +61,7 @@ describe("DataAPI Utility methods", function(){
     it("should not be expired accessToken before expiresIn seconds passed", function(){
         var expiresIn = 60,
             timeValue = 0;
-        spyOn(Date.prototype, 'getTime').andCallFake(function() {
+        spyOn(Date.prototype, 'getTime').and.callFake(function() {
             return timeValue;
         });
         api.storeTokenData({
@@ -144,7 +144,7 @@ describe("DataAPI Utility methods", function(){
     });
 
     it("should not be thrown an exception even if request was failed", function(){
-        spyOn(MT.DataAPI.prototype, 'request').andCallFake(function(method, endpoint, options, callback) {
+        spyOn(MT.DataAPI.prototype, 'request').and.callFake(function(method, endpoint, options, callback) {
             callback({
                 error: {
                     code: 500

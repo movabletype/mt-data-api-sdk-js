@@ -23,7 +23,7 @@ describe("DataAPI Request", function(){
     it("should not be added \"suppressResponseCodes\" parameter by default", function(){
         var requestUrl;
         spyOn(MT.DataAPI.prototype, "sendXMLHttpRequest")
-            .andCallFake(function(xhr, method, url, params, defaultHeaders) {
+            .and.callFake(function(xhr, method, url, params, defaultHeaders) {
                 requestUrl = url;
                 return xhr;
             });
@@ -37,7 +37,7 @@ describe("DataAPI Request", function(){
     it("should be added \"suppressResponseCodes\" parameter if option is specified", function(){
         var requestUrl;
         spyOn(MT.DataAPI.prototype, "sendXMLHttpRequest")
-            .andCallFake(function(xhr, method, url, params, defaultHeaders) {
+            .and.callFake(function(xhr, method, url, params, defaultHeaders) {
                 requestUrl = url;
                 return xhr;
             });
@@ -143,9 +143,9 @@ describe("DataAPI Request", function(){
                 xdr    = new FakeXDomainRequest(),
                 params = 'a=1';
 
-            spyOn(MT.DataAPI.prototype, '_requestVia').andReturn('xdr');
+            spyOn(MT.DataAPI.prototype, '_requestVia').and.returnValue('xdr');
 
-            window.XDomainRequest = jasmine.createSpy('XDomainRequest').andCallFake(function() {
+            window.XDomainRequest = jasmine.createSpy('XDomainRequest').and.callFake(function() {
                 return xdr;
             });
 
@@ -165,7 +165,7 @@ describe("DataAPI Request", function(){
                 xdr    = new FakeXDomainRequest(),
                 params = 'a=1';
 
-            spyOn(MT.DataAPI.prototype, '_requestVia').andReturn('xdr');
+            spyOn(MT.DataAPI.prototype, '_requestVia').and.returnValue('xdr');
 
             window.XDomainRequest = FakeXDomainRequest;
 
@@ -188,9 +188,9 @@ describe("DataAPI Request", function(){
                 xdr    = new FakeXDomainRequest(),
                 params = 'a=1';
 
-            spyOn(MT.DataAPI.prototype, '_requestVia').andReturn('xdr');
+            spyOn(MT.DataAPI.prototype, '_requestVia').and.returnValue('xdr');
 
-            window.XDomainRequest = jasmine.createSpy('XDomainRequest').andCallFake(function() {
+            window.XDomainRequest = jasmine.createSpy('XDomainRequest').and.callFake(function() {
                 return xdr
             });
 
@@ -210,9 +210,9 @@ describe("DataAPI Request", function(){
                 xdr    = new FakeXDomainRequest(),
                 params = 'a=1';
 
-            spyOn(MT.DataAPI.prototype, '_requestVia').andReturn('xdr');
+            spyOn(MT.DataAPI.prototype, '_requestVia').and.returnValue('xdr');
 
-            window.XDomainRequest = jasmine.createSpy('XDomainRequest').andCallFake(function() {
+            window.XDomainRequest = jasmine.createSpy('XDomainRequest').and.callFake(function() {
                 return xdr;
             });
 
@@ -235,9 +235,9 @@ describe("DataAPI Request", function(){
                 xdr    = new FakeXDomainRequest(),
                 params = 'a=1';
 
-            spyOn(MT.DataAPI.prototype, '_requestVia').andReturn('xdr');
+            spyOn(MT.DataAPI.prototype, '_requestVia').and.returnValue('xdr');
 
-            window.XDomainRequest = jasmine.createSpy('XDomainRequest').andCallFake(function() {
+            window.XDomainRequest = jasmine.createSpy('XDomainRequest').and.callFake(function() {
                 return xdr;
             });
 
@@ -260,9 +260,9 @@ describe("DataAPI Request", function(){
                 xdr    = new FakeXDomainRequest(),
                 params = 'a=1';
 
-            spyOn(MT.DataAPI.prototype, '_requestVia').andReturn('xdr');
+            spyOn(MT.DataAPI.prototype, '_requestVia').and.returnValue('xdr');
 
-            window.XDomainRequest = jasmine.createSpy('XDomainRequest').andCallFake(function() {
+            window.XDomainRequest = jasmine.createSpy('XDomainRequest').and.callFake(function() {
                 return xdr;
             });
 
@@ -281,12 +281,12 @@ describe("DataAPI Request", function(){
                 xdr    = new FakeXDomainRequest(),
                 params = 'a=1';
 
-            spyOn(MT.DataAPI.prototype, '_requestVia').andReturn('xdr');
-            spyOn(MT.DataAPI.prototype, 'getTokenData').andReturn({
+            spyOn(MT.DataAPI.prototype, '_requestVia').and.returnValue('xdr');
+            spyOn(MT.DataAPI.prototype, 'getTokenData').and.returnValue({
                 accessToken: 'some token'
             });
 
-            window.XDomainRequest = jasmine.createSpy('XDomainRequest').andCallFake(function() {
+            window.XDomainRequest = jasmine.createSpy('XDomainRequest').and.callFake(function() {
                 return xdr;
             });
 
@@ -440,7 +440,7 @@ describe("DataAPI Request", function(){
                 }),
                 $form    = $('<form />');
 
-            spyOn(api, '_serializeFormElementToObject').andReturn({
+            spyOn(api, '_serializeFormElementToObject').and.returnValue({
                 message: messages
             });
 
@@ -466,7 +466,7 @@ describe("DataAPI Request", function(){
             }),
             url;
 
-        spyOn(api, 'sendXMLHttpRequest').andCallFake(function(_xhr, _method, _url) {
+        spyOn(api, 'sendXMLHttpRequest').and.callFake(function(_xhr, _method, _url) {
             url = _url;
         });;
         api.request('GET', '/endpoint-test');
@@ -481,7 +481,7 @@ describe("DataAPI Request", function(){
             }),
             xhr;
 
-        spyOn(api, 'sendXMLHttpRequest').andCallFake(function(_xhr, _method, _url) {
+        spyOn(api, 'sendXMLHttpRequest').and.callFake(function(_xhr, _method, _url) {
             xhr = _xhr;
         });;
         api.request('GET', '/endpoint-test');
@@ -495,7 +495,7 @@ describe("DataAPI Request", function(){
             }),
             url;
 
-        spyOn(api, 'sendXMLHttpRequest').andCallFake(function(_xhr, _method, _url) {
+        spyOn(api, 'sendXMLHttpRequest').and.callFake(function(_xhr, _method, _url) {
             url = _url;
         });;
         api.request('GET', '/endpoint-test');
@@ -507,10 +507,10 @@ describe("DataAPI Request", function(){
         var api = newDataAPI(),
             headers;
 
-        spyOn(MT.DataAPI.prototype, 'getTokenData').andReturn({
+        spyOn(MT.DataAPI.prototype, 'getTokenData').and.returnValue({
             accessToken: 'some token'
         });
-        spyOn(api, 'sendXMLHttpRequest').andCallFake(function(_xhr, _method, _url, _params, _headers) {
+        spyOn(api, 'sendXMLHttpRequest').and.callFake(function(_xhr, _method, _url, _params, _headers) {
             headers = _headers;
         });;
         api.request('POST', '/token');
