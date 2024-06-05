@@ -133,16 +133,6 @@ module.exports = function (grunt) {
         }
       },
     },
-    jasmine_node: {
-      projectRoot: "spec",
-      useHelpers: true,
-      jUnit: {
-        report: true,
-        savePath: "reports/node/",
-        useDotNotation: true,
-        consolidate: true
-      }
-    },
     movabletype: {
       options: {
         port: 9002,

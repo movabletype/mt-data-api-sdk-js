@@ -88,56 +88,6 @@ module.exports = function( grunt ) {
         }
     });
 
-    grunt.registerTask("cleanup-jasmine-node-result", function() {
-        var path   = require("path"),
-            fs     = require("fs"),
-            dir    = grunt.config.get("jasmine_node.jUnit.savePath"),
-            status = true;
-
-        function existsSync(p) {
-            return !!fs.existsSync ? fs.existsSync(p) : path.existsSync(p);
-        }
-
-        if (! existsSync(dir)) {
-            return;
-        }
-
-        fs.readdirSync(dir).forEach(function(f) {
-            if (! status || ! /xml$/i.test(f)) {
-                return;
-            }
-
-            fs.unlink(path.join(dir, f));
-        });
-    });
-
-    grunt.registerTask("check-jasmine-node-result", function() {
-        var path   = require("path"),
-            fs     = require("fs"),
-            dir    = grunt.config.get("jasmine_node.jUnit.savePath"),
-            files  = fs.readdirSync(dir),
-            status = true;
-
-        files.forEach(function(f) {
-            if (! status || ! /xml$/i.test(f)) {
-                return;
-            }
-
-            try {
-                status = /failures="0"/.test(fs.readFileSync(path.join(dir, f)));
-            }
-            catch (e) {
-                status = false;
-            }
-        });
-
-        if (! status) {
-            stopMovableTypeServer();
-        }
-
-        return status;
-    });
-
     grunt.registerTask("run-if-not-exists", function() {
         var fs   = require("fs"),
             path = require("path"),

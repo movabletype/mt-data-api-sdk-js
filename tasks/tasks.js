@@ -9,7 +9,6 @@ module.exports = function( grunt ) {
         "dev",
         "start-movabletype-server:" + grunt.config.get("movabletype.options.port"),
         "cleanup-jasmine-node-result",
-        "jasmine_node",
         "check-jasmine-node-result",
         "stop-movabletype-server",
     ]);
