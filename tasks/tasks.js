@@ -7,7 +7,6 @@ module.exports = function( grunt ) {
 
     grunt.registerTask("test-headless-browser", [
         "dev",
-        "configureProxies:jasmine",
         "connect:jasmine",
         "start-movabletype-server",
         "jasmine:data-api",
@@ -16,7 +15,6 @@ module.exports = function( grunt ) {
 
     grunt.registerTask("test-browser", [
         "dev",
-        "configureProxies:jasmine",
         "connect:jasmine",
         "start-movabletype-server",
         "run-if-not-exists:" +
@@ -24,15 +22,6 @@ module.exports = function( grunt ) {
             ":jasmine:data-api",
         "open:test",
         "prompt:wait",
-        "stop-movabletype-server",
-    ]);
-
-    grunt.registerTask("test-browser-coverage", [
-        "dev",
-        "configureProxies:jasmine",
-        "connect:jasmine",
-        "start-movabletype-server",
-        "jasmine:data-api-coverage",
         "stop-movabletype-server",
     ]);
 
