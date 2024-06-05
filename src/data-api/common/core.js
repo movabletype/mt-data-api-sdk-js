@@ -915,14 +915,7 @@ DataAPI.prototype = {
 
         return fetch(url, options).then(function (response){
             clearTimeout(timeoutId);
-            if (response.ok) {
-                return response;
-            }
-            else {
-                var error = new Error(response.statusText);
-                error.response = response;
-                throw error;
-            }
+            return response;
         });
     },
 
