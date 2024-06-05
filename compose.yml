@@ -1,0 +1,11 @@
+services:
+  builder:
+    build:
+      context: .
+      args:
+        - NODE=18
+    platform: linux/amd64
+    volumes:
+      - .:/app
+    working_dir: /app
+    user: "${UID:-1000}:${GID:-1000}"
