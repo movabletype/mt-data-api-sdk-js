@@ -25,6 +25,10 @@
 		"escape": true,
 		"unescape": true,
 		"console": true,
-		"sjcl": true
+		"sjcl": true,
+		"AbortController": true,
+		"Headers": true,
+		"fetch": true,
+		"globalThis": true
 	}
 }
