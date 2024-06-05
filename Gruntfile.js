@@ -143,7 +143,6 @@ module.exports = function (grunt) {
 
   grunt.task.loadTasks("tasks");
   grunt.task.loadNpmTasks("grunt-contrib-jasmine");
-  grunt.task.loadNpmTasks("grunt-contrib-jasmine-node");
   grunt.task.loadNpmTasks("grunt-contrib-jshint");
   grunt.task.loadNpmTasks("grunt-contrib-uglify");
   grunt.task.loadNpmTasks("grunt-contrib-clean");
