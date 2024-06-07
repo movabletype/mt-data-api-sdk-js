@@ -873,6 +873,52 @@ DataAPI.prototype = {
         return xhr;
     },
 
+    _sendFetchApiRequest: function(method, url, params, defaultHeaders) {
+        var controller, signal, timeoutId, headers, k, uk, options;
+        controller = new AbortController();
+        signal = controller.signal;
+
+        if (typeof this.o.timeout !== 'undefined') {
+            timeoutId = setTimeout(function (){
+                controller.abort();
+            }, this.o.timeout);
+        }
+
+        headers = new Headers(defaultHeaders);
+        if (typeof params === 'string') {
+            headers.set('Content-Type', 'application/x-www-form-urlencoded');
+        }
+        if (! this.o.crossOrigin) {
+            headers.set('X-Requested-With', 'XMLHttpRequest');
+        }
+        function normalizeHeaderKey(all, prefix, letter) {
+            return prefix + letter.toUpperCase();
+        }
+        if (params && params.getHeaders) {
+            headers = params.getHeaders();
+            for (k in headers) {
+                uk = k.replace(/(^|-)([a-z])/g, normalizeHeaderKey);
+                headers.set(uk, headers[k]);
+            }
+        }
+
+        options = {
+            method: method,
+            headers: headers,
+            credentials: 'include',
+            mode: 'cors',
+            signal: signal
+        };
+        if (method.toLowerCase() !== 'get') {
+            options.body = params;
+        }
+
+        return fetch(url, options).then(function (response){
+            clearTimeout(timeoutId);
+            return response;
+        });
+    },
+
     _serializeFormElementToObject: function(form) {
         var i, e, type,
             data           = {},
@@ -995,8 +1041,9 @@ DataAPI.prototype = {
 
     _requestVia: function() {
         return (window.XDomainRequest &&
-                this.o.crossOrigin &&
-                /msie (8|9)\./i.test(window.navigator.appVersion)) ? 'xdr' : 'xhr';
+            this.o.crossOrigin &&
+            /msie (8|9)\./i.test(window.navigator.appVersion)) ? 'xdr' :
+            (window.XMLHttpRequest ? 'xhr' : 'fetch');
     },
 
     /**
@@ -1353,6 +1400,25 @@ DataAPI.prototype = {
                 }
             };
             return this.sendXMLHttpRequest(xhr, method, base + endpoint, params, defaultHeaders);
+        }
+        else if (via === 'fetch') {
+            this._sendFetchApiRequest(method, base + endpoint, params, defaultHeaders).then(function (response){
+                var responseResult, url;
+                responseResult = response.text().then(function (text){
+                    responseCallback(response.headers.get('Content-Type'), text, response.status, response.statusText);
+                });
+
+                if (responseResult === false) {
+                    return;
+                }
+
+                url = response.headers.get('X-MT-Next-Phase-URL');
+                if (!url) {
+                    return;
+                }
+
+                this._sendFetchApiRequest(method, base + url, params, defaultHeaders);
+            });
         }
         else {
             (function() {

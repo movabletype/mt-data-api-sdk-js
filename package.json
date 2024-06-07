@@ -1,6 +1,6 @@
 {
   "name": "mt-data-api-sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Movable Type DataAPI SDK for JavaScript",
   "homepage": "https://github.com/movabletype/mt-data-api-sdk-js",
   "repository": {
@@ -9,9 +9,8 @@
   },
   "author": "Six Apart, Ltd.",
   "main": "./node-lib/bootstrap",
-  "dependencies": {
-    "form-data": "~0.0.10",
-    "xmlhttprequest": "https://github.com/usualoma/node-XMLHttpRequest.git"
+  "engines": {
+    "node": ">=18.0.0"
   },
   "devDependencies": {
     "matchdep": "~0.1.2",

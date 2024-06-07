@@ -1,12 +1,16 @@
+dist: jammy
 sudo: required
 language: node_js
 node_js:
-  - 12
+  - 18
 services:
   - mysql
 env:
   - MT_HOME=/home/travis/mt
 before_install:
+  - curl -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar -xj
+  - sudo mv phantomjs-1.9.8-linux-x86_64 /usr/local/share/phantomjs
+  - sudo ln -sf /usr/local/share/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
   - npm install -g grunt-cli
   - npm install -g bower
   - bower install

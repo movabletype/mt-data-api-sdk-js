@@ -46,6 +46,16 @@ api.authenticate(credential, function(response) {
 
 # Development
 
+## Environment
+
+You can use `docker compose` to prepare your development environment.
+
+```
+  docker compose run builder /bin/bash
+  [builder] npm install
+  [builder] make
+```
+
 ## Prerequisites
 Installation depends on [node](http://nodejs.org/), [npm](https://npmjs.org/), [bower](http://bower.io/), and [grunt-cli](http://gruntjs.com/)
 
