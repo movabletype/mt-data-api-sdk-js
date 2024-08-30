@@ -6,7 +6,9 @@ node_js:
 services:
   - mysql
 env:
-  - MT_HOME=/home/travis/mt
+  global:
+    - MT_HOME=/home/travis/mt
+    - PERL_CPANM_OPT="--from https://www.cpan.org"
 before_install:
   - curl -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar -xj
   - sudo mv phantomjs-1.9.8-linux-x86_64 /usr/local/share/phantomjs
