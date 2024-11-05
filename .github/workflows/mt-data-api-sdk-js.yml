@@ -9,6 +9,8 @@ on:
 concurrency:
 #   # This item has no matching transformer
 #   maximum_number_of_builds: 0
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
 env:
   MT_HOME: "/home/travis/mt"
   PERL_CPANM_OPT: "--from https://www.cpan.org"
@@ -59,22 +61,6 @@ jobs:
     - run: perl -i -pe 's{(eval "use MT::PSGI;";)}{$1 die \$@ if \$@;}g' $MT_HOME/t/mysql-test-psgi-server.pl
     - run: npm install
     - run: npm test
-    - uses: rectalogic/notify-irc@v1
-      if: "${{ github.event_name != 'pull_request' }}"
-      with:
-        server: irc.freenode.com
-        port: 6697
-        channel: movabletype
-        nickname: Default nickname
-        message: Default message
-    - uses: rectalogic/notify-irc@v1
-      if: "${{ github.event_name != 'pull_request' }}"
-      with:
-        server: irc.freenode.com
-        port: 6697
-        channel: movabletype-ja
-        nickname: Default nickname
-        message: Default message
     services:
       mysql:
         image: mysql
