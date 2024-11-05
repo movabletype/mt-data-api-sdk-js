@@ -32,6 +32,7 @@ jobs:
     - run: npm install -g grunt-cli
     - run: npm install -g bower
     - run: bower install
+    - run: sudo /etc/init.d/mysql start
     - run: mysql -e 'CREATE DATABASE mt_test'
     - run: sudo apt-get update
     - run: sudo apt-get install cpanminus libplack-perl libdbd-mysql-perl curl 2>&1
