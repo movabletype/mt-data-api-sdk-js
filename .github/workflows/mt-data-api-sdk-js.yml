@@ -33,7 +33,7 @@ jobs:
     - run: npm install -g bower
     - run: bower install
     - run: sudo /etc/init.d/mysql start
-    - run: mysql -e 'CREATE DATABASE mt_test'
+    #- run: mysql --user=mt --password=password -e 'CREATE DATABASE mt_test'
     - run: sudo apt-get update
     - run: sudo apt-get install cpanminus libplack-perl libdbd-mysql-perl curl 2>&1
     - run: curl -sL https://cpanmin.us | perl - --sudo App::cpanminus
@@ -58,10 +58,15 @@ jobs:
     - run: sudo cpanm -n Starman
     - run: sudo cpanm -n Test::Deep
     - run: git clone --branch develop --depth=1 https://github.com/movabletype/movabletype.git $MT_HOME
-    - run: perl -i -pe 's{DBUser mt}{DBUser travis}g' $MT_HOME/t/mysql-test.cfg
+    #- run: perl -i -pe 's{DBUser mt}{DBUser travis}g' $MT_HOME/t/mysql-test.cfg
+    - run: echo 'DBPassword password' >> $MT_HOME/t/mysql-test.cfg
     - run: perl -i -pe 's{(eval "use MT::PSGI;";)}{$1 die \$@ if \$@;}g' $MT_HOME/t/mysql-test-psgi-server.pl
     - run: npm install
     - run: npm test
     services:
       mysql:
         image: mysql
+        env:
+          MYSQL_DATABASE: mt_test
+          MYSQL_USER: mt
+          MYSQL_PASSWORD: password
