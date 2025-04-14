@@ -1,0 +1,72 @@
+name: movabletype/mt-data-api-sdk-js
+on:
+  push:
+    branches:
+    - "**/*"
+  pull_request:
+  schedule:
+  - cron: 5 15 22 * *
+concurrency:
+#   # This item has no matching transformer
+#   maximum_number_of_builds: 0
+  group: "${{ github.ref }}"
+  cancel-in-progress: true
+env:
+  MT_HOME: movabletype
+  PERL_CPANM_OPT: "--from https://www.cpan.org"
+jobs:
+  test:
+    runs-on: # this agent type is not supported: [[{"dist"=>"jammy"}]]
+             ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4.1.0
+    - uses: actions/setup-node@v4.0.0
+      with:
+        cache: npm
+        node-version: 18
+#     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
+    - run: curl -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar -xj
+    - run: sudo mv phantomjs-1.9.8-linux-x86_64 /usr/local/share/phantomjs
+    - run: sudo ln -sf /usr/local/share/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
+    - run: npm install -g grunt-cli
+    - run: npm install -g bower
+    - run: bower install
+    - run: sudo /etc/init.d/mysql start
+    #- run: mysql --user=mt --password=password -e 'CREATE DATABASE mt_test'
+    - run: sudo apt-get update
+    - run: sudo apt-get install cpanminus libplack-perl libdbd-mysql-perl curl 2>&1
+    - run: curl -sL https://cpanmin.us | perl - --sudo App::cpanminus
+    - run: sudo cpanm -n Digest::SHA
+    - run: sudo cpanm -n Digest::SHA1
+    - run: sudo cpanm -n CGI::PSGI
+    - run: sudo cpanm -n CGI::Parse::PSGI
+    - run: sudo cpanm -n CGI::Compile
+    - run: sudo cpanm -n XMLRPC::Transport::HTTP::Plack
+    - run: sudo cpanm -n HTML::Entities
+    - run: sudo cpanm -n HTML::Parser
+    - run: sudo cpanm -n Crypt::DSA
+    - run: sudo cpanm -n Crypt::SSLeay
+    - run: sudo cpanm -n Archive::Tar
+    - run: sudo cpanm -n Archive::Zip
+    - run: sudo cpanm -n IO::Compress::Gzip
+    - run: sudo cpanm -n IO::Uncompress::Gunzip
+    - run: sudo cpanm -n Net::SMTP
+    - run: sudo cpanm -n IO::Socket::SSL
+    - run: sudo cpanm -n Net::SSLeay
+    - run: sudo cpanm -n XML::Parser
+    - run: sudo cpanm -n Starman
+    - run: sudo cpanm -n Test::Deep
+    - run: git clone --branch develop --depth=1 https://github.com/movabletype/movabletype.git ${{ env.MT_HOME }}
+    #- run: perl -i -pe 's{DBUser mt}{DBUser travis}g' $MT_HOME/t/mysql-test.cfg
+    - run: echo 'DBPassword password' >> ${{ env.MT_HOME }}/t/mysql-test.cfg
+    - run: perl -i -pe 's{(eval "use MT::PSGI;";)}{$1 die \$@ if \$@;}g' ${{ env.MT_HOME }}/t/mysql-test-psgi-server.pl
+    - run: npm install
+    - run: npm test
+    services:
+      mysql:
+        image: mysql
+        env:
+          MYSQL_DATABASE: mt_test
+          MYSQL_USER: mt
+          MYSQL_PASSWORD: password
