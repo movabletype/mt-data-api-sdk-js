@@ -26,9 +26,6 @@ jobs:
         cache: npm
         node-version: 18
 #     # 'sudo' was not transformed because there is no suitable equivalent in GitHub Actions
-    - run: curl -sL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 | tar -xj
-    - run: sudo mv phantomjs-1.9.8-linux-x86_64 /usr/local/share/phantomjs
-    - run: sudo ln -sf /usr/local/share/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
     - run: npm install -g grunt-cli
     - run: npm install -g bower
     - run: bower install
