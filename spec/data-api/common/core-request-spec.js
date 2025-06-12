@@ -471,7 +471,7 @@ describe("DataAPI Request", function(){
         });;
         api.request('GET', '/endpoint-test');
 
-        expect(url).toMatch(new RegExp(dataApiBaseUrl + '/v6/endpoint-test\\?_=\\d+'));
+        expect(url).toMatch(new RegExp(dataApiBaseUrl + '/v7/endpoint-test\\?_=\\d+'));
     });
 
     it("should be set timeout property if the timeout option is set", function(){
@@ -500,7 +500,7 @@ describe("DataAPI Request", function(){
         });;
         api.request('GET', '/endpoint-test');
 
-        expect(url).toEqual(dataApiBaseUrl + '/v6/endpoint-test?format=mpac');
+        expect(url).toEqual(dataApiBaseUrl + '/v7/endpoint-test?format=mpac');
     });
 
     it("should be set \"X-MT-Authorization\" request header if an accessToke is already set up", function(){

@@ -1,5 +1,5 @@
 /*
- * Movable Type DataAPI SDK for JavaScript v6
+ * Movable Type DataAPI SDK for JavaScript v7
  * https://github.com/movabletype/mt-data-api-sdk-js
  * Copyright (c) Six Apart Ltd.
  * This program is distributed under the terms of the MIT license.
@@ -148,7 +148,7 @@ var DataAPI = function(options) {
  * @private
  * @type Number
  */
-DataAPI.version = 6;
+DataAPI.version = 7;
 
 /**
  * The key of access token of this api object.
