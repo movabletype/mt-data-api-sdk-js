@@ -5508,6 +5508,12 @@ DataAPI.on('initialize', function() {
         "resources": null
     },
     {
+        "id": "export_site_theme",
+        "route": "/sites/:site_id/export_theme",
+        "verb": "POST",
+        "resources": null
+    },
+    {
         "id": "list_stats_pageviews_for_path",
         "route": "/sites/:site_id/stats/path/pageviews",
         "verb": "GET",
@@ -5532,9 +5538,63 @@ DataAPI.on('initialize', function() {
         "resources": null
     },
     {
-        "id": "export_site_theme",
-        "route": "/sites/:site_id/export_theme",
-        "verb": "POST",
+        "id": "list_stats_screenpageviews_for_path",
+        "route": "/sites/:site_id/stats/path/screenPageViews",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_sessions_for_path",
+        "route": "/sites/:site_id/stats/path/sessions",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_screenpageviews_for_date",
+        "route": "/sites/:site_id/stats/date/screenPageViews",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_screenpageviews_for_yearweek",
+        "route": "/sites/:site_id/stats/yearWeek/screenPageViews",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_screenpageviews_for_yearmonth",
+        "route": "/sites/:site_id/stats/yearMonth/screenPageViews",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_screenpageviews_for_year",
+        "route": "/sites/:site_id/stats/year/screenPageViews",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_sessions_for_date",
+        "route": "/sites/:site_id/stats/date/sessions",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_sessions_for_yearweek",
+        "route": "/sites/:site_id/stats/yearWeek/sessions",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_sessions_for_yearmonth",
+        "route": "/sites/:site_id/stats/yearMonth/sessions",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "list_stats_sessions_for_year",
+        "route": "/sites/:site_id/stats/year/sessions",
+        "verb": "GET",
         "resources": null
     },
     {
@@ -5593,40 +5653,6 @@ DataAPI.on('initialize', function() {
         "id": "synchronize_users",
         "route": "/users/synchronize",
         "verb": "POST",
-        "resources": null
-    },
-    {
-        "id": "list_formatted_texts",
-        "route": "/sites/:site_id/formatted_texts",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "get_formatted_text",
-        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
-        "verb": "GET",
-        "resources": null
-    },
-    {
-        "id": "create_formatted_text",
-        "route": "/sites/:site_id/formatted_texts",
-        "verb": "POST",
-        "resources": [
-            "formatted_text"
-        ]
-    },
-    {
-        "id": "update_formatted_text",
-        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
-        "verb": "PUT",
-        "resources": [
-            "formatted_text"
-        ]
-    },
-    {
-        "id": "delete_formatted_text",
-        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
-        "verb": "DELETE",
         "resources": null
     },
     {
@@ -5700,6 +5726,40 @@ DataAPI.on('initialize', function() {
         "resources": [
             "comment"
         ]
+    },
+    {
+        "id": "list_formatted_texts",
+        "route": "/sites/:site_id/formatted_texts",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "get_formatted_text",
+        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
+        "verb": "GET",
+        "resources": null
+    },
+    {
+        "id": "create_formatted_text",
+        "route": "/sites/:site_id/formatted_texts",
+        "verb": "POST",
+        "resources": [
+            "formatted_text"
+        ]
+    },
+    {
+        "id": "update_formatted_text",
+        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
+        "verb": "PUT",
+        "resources": [
+            "formatted_text"
+        ]
+    },
+    {
+        "id": "delete_formatted_text",
+        "route": "/sites/:site_id/formatted_texts/:formatted_text_id",
+        "verb": "DELETE",
+        "resources": null
     }
 ]
 
