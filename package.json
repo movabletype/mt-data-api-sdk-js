@@ -26,7 +26,8 @@
     "grunt-preprocess": "~2.3.0",
     "grunt-prompt": "~0.1.1",
     "grunt-template-jasmine-istanbul": "~0.2.4",
-    "matchdep": "~0.1.2"
+    "matchdep": "~0.1.2",
+    "sigstore": "^4.1.1"
   },
   "scripts": {
     "test": "grunt ci"
